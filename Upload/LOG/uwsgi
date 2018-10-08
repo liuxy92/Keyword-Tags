@@ -1,0 +1,287 @@
+[2018-09-27 11:32:54][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:32:54][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 11:41:32][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:41:32][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 11:42:03][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:42:03][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 11:43:21][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:43:21][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 11:44:07][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 11:44:40][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:44:40][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 11:45:33][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 11:45:33][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:20:39][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 13:21:16][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:21:16][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:25:49][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:25:49][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:25:53][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:25:53][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:26:58][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:26:58][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:31:18][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 13:34:47][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 13:35:08][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 13:39:05][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:39:05][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:40:33][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:40:33][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:43:39][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 13:43:39][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 13:49:06][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
+[2018-09-27 14:02:06][log.py][line:46][INFO] 上传文件数据解析完毕!!!
+[2018-09-27 14:02:06][app.py][line:1761][ERROR] Exception on /upload [POST]
+Traceback (most recent call last):
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/user/Documents/Upload/venv/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./upload_api.py", line 33, in upload
+    save()
+  File "./db_save.py", line 49, in save
+    from elasticsearch import Elasticsearch
+ModuleNotFoundError: No module named 'elasticsearch'
+[2018-09-27 14:05:25][log.py][line:46][INFO] {"msg":"POST请求,携带的参数不是 file "}
