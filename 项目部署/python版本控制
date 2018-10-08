@@ -1,0 +1,33 @@
+以python虚拟环境virtualenv安装进行版本分离
+1.安装virtualenv
+pip install --upgrade pip 
+pip3 install virtualenv
+
+2.使用virtualenv创建python3环境
+
+3、创建一个使用python3的虚拟环境：
+
+virtualenv -p /usr/bin/python3 py35env 
+错误找不到命令，进入安装目录下执行
+python virtualenv.py -p /usr/bin/python3 /py35env
+
+4.cd /py35env/bin
+
+5.启动虚拟环境
+source activate
+测试：
+命令行输入python -V查看版本是否是python3
+6.退出虚拟环境
+deactivate
+
+
+7.使用virtualenv创建python2环境
+virtualenv -p /usr/bin/python2 py27env 
+
+8.cd /py27env/bin
+
+9.启动虚拟环境
+source activate
+测试：
+命令行输入python -V查看版本是否是python2
+

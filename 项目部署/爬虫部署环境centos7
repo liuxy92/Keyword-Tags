@@ -1,0 +1,451 @@
+  爬虫部署环境
+一.安装Python3.5
+参考文档:https://www.linuxidc.com/Linux/2016-04/129784.htm
+1.安装一些Python需求的依赖包
+yum安装
+yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel
+
+2.下载Python3.5压缩包
+
+wget https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz
+如果:-bash: wget: 未找到命令
+ yum -y install wget
+3.解压包
+
+tar -zxvf Python-3.5.1.tgz
+cd Python-3.5.1
+./configure --prefix=/usr/local/python-3.5.1 --enable-shared
+如果报错:
+    
+        checking build system type... x86_64-unknown-linux-gnu
+        checking host system type... x86_64-unknown-linux-gnu
+        checking for --enable-universalsdk... no
+        checking for --with-universal-archs... no
+        checking MACHDEP... linux
+        checking for --without-gcc... no
+        checking for gcc... no
+        checking for cc... no
+        checking for cl.exe... no
+        configure: error: in `/root/Python-3.5.1':
+        configure: error: no acceptable C compiler found in $PATH
+        See `config.log' for more details
+
+输入命令:
+    sudo yum -y install make gcc gcc-c++ kernel-devel m4 ncurses-devel openssl-devel
+
+4.CD进入目录
+cd Python-3.5.1
+
+5.创建Python3的安装目录
+mkdir /usr/local/python3
+
+6.  ./configure --prefix=/usr/local/python-3.5.1 --enable-shared
+
+7.make && make install
+
+8.创建python3和pip3的软连接
+
+ln -s /usr/local/python3/bin/python3 /usr/bin/python3
+ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
+
+9.测试安装后的python3和pip3命令
+
+[root@host]# python3 -V
+Python 3.6.4
+[root@host]# pip3 -V
+pip 9.0.1 from /usr/local/python3/lib/python3.6/site-packages (python 3.5) 
+
+安装完成
+
+二.以Python虚拟环境virtualenv安装进行版本分离
+(1)安裝virtualenv
+pip install --upgrade pip
+更新pip3方法:
+pip3 install --upgrade pip
+
+pip3 install virtualenv
+
+(2)创建一个使用Python3的使用环境
+useradd centos
+virtualenv -p /usr/bin/python3 /home/centos/py35env
+如果找不到目录:
+    查看which is python3 的真实目录
+    然后在创建虚拟环境
+如果报错找不到命令，进入安装目录下执行
+python virtualenv.py -p /usr/bin/python3 /py35env
+
+(3)启动虚拟环境
+
+cd /py35env/bin
+
+(4)source activate
+
+(5)测试 在激活的虚拟下命令行输入 Python -V查看版本是否为3版本
+
+(6)退出虚拟环境
+
+deactivate
+
+(7)建立python2虚拟环境
+virtualenv -p /usr/bin/python2 /home/centos/py27env 
+如果找不到目录:
+    查看which is python3 的真实目录
+    然后在创建虚拟环境
+
+(8).cd /py27env/bin
+(9).启动虚拟环境
+source activate
+测试：
+命令行输入python -V查看版本是否是python2
+
+三.安装scrapy框架(支持twisted，没有模块需要下载)
+
+1.yum install gcc libffi-devel openssl-devel libxml2 libxslt-devel libxml2-devel python-devel -y
+
+2.yum install python-setuptools
+
+3.安装 lxml
+pip install lxml
+
+4.如果以上都顺利,就开始安装scrapy吧
+
+pip install scrapy
+
+
+四.安装部署scrapyd
+
+1.pip install scrapyd 
+  pip install scrapyd-client
+
+2.测试安装是否成功
+
+在命令行直接输入scrapyd 运行方式在浏览器输入http://localhost:6800/
+
+3.修改配置文件更改连接方式为远程连接
+
+scrapyd的配置文件：/usr/local/lib/python3.5/dist-packages/scrapyd/default_scrapyd.conf
+注:查看下自己的虚拟环境的Python3.5路径,然后在找scrapyd,例如我的路径:/home/centos/py35env/lib/python3.5/site-packages/scrapyd
+
+修改配置文件
+bind_address = 127.0.0.1
+改为
+bind_address = 0.0.0.0
+
+改变后输入
+http://IP:6800(IP为本机IP)查询本机IP   命令ifconfig
+这样我们就可以在其他主机通过浏览器访问了
+
+
+4. 把scrapyd设置为系统后台服务和启动项
+(1)新建文件/etc/init.d/scrapyd，名称为scrapyd
+
+#!/bin/bash  
+PORT=6800  
+HOME="/var/scrapyd"  
+BIN="/usr/local/bin/scrapyd"(此处需要修改，需要找到scrapyd命令的安装位置，绝对路径)  查找方式：which scrapyd
+   
+pid=`netstat -lnopt | grep :$PORT | awk '/python/{gsub(/\/python/,"",$7);print $7;}'`  
+start() {  
+   if [ -n "$pid" ]; then  
+      echo "server already start,pid:$pid"  
+      return 0  
+   fi  
+   
+   cd $HOME  
+   nohup $BIN >> $HOME/scrapyd.log 2>&1 &  
+   echo "start at port:$PORT"  
+}  
+   
+stop() {  
+   if [ -z "$pid" ]; then  
+      echo "not find program on port:$PORT"  
+      return 0  
+   fi  
+   
+   #结束程序，使用讯号2，如果不行可以尝试讯号9强制结束  
+   kill -9 $pid  
+   echo "kill program use signal 9,pid:$pid"  
+}  
+   
+status() {  
+   if [ -z "$pid" ]; then  
+      echo "not find program on port:$PORT"  
+   else  
+      echo "program is running,pid:$pid"  
+   fi  
+}  
+   
+case $1 in  
+   start)  
+      start  
+   ;;  
+   stop)  
+      stop  
+   ;;  
+   status)  
+      status  
+   ;;  
+   *)  
+      echo "Usage: {start|stop|status}"  
+   ;;  
+esac  
+   
+exit 0  
+
+(2)新建目录/var/scrapyd
+
+
+(3)可以使用命令进行操作（启动停止状态）
+
+service scrapyd  {start|stop|status}
+如果权限不够可以添加权限给/etc/init.d/scrapyd
+chmod +x scrapyd
+
+(4)设置为系统启动项
+启用禁用命令：sysv-rc-conf scrapyd on/off
+(注释可以不输入)
+
+5.部署项目
+
+(1)创建一个scrapyd工程，scrapyd项目目录下有一个scrapy.cfg文件，文件内容如下
+	# Automatically created by: scrapy startproject
+	#
+	# For more information about the [deploy] section see:
+	# https://scrapyd.readthedocs.org/en/latest/deploy.html
+
+	[settings]
+	default = market_spider.settings
+
+	[deploy:demo]  # demo是指这个deploy的名称，自己命名，可以多个。（后面有用到） 
+	url = http://localhost:6800/
+	username = demo  # 新建的时候没有这个的，自己添加的
+	password = 123456  # 新建的时候没有这个的，自己添加的
+	project = market_spider  # 工程的名称
+
+
+(2)在scrapy.cfg目录执行部署查看命令（注释：部署项目全部都要在scrapy.cfg下执行，在项目目录下不要有多余的py文件，会导致出现别的错误）
+
+scrapyd-deploy demo -l   [deploy:demo]  # demo是指这个deploy的名称
+
+(3)在工程目录下执行部署指令，部署的指令格式为：scrapyd-deploy <target> -p <project> 
+* target就是配置文件的deploy的名称，针对上面的配置就是demo 
+* project如果不输就是配置文件中的project
+
+(4)运行爬虫
+curl http://127.0.0.1:6800/schedule.json -d project=myproject -d spider=myspider(将对应的ip，配置文件中的projrct，spiders项目中的name写入spider=)
+
+停止运行爬虫：
+
+curl http://localhost:6800/cancel.json -d project=项目名称 -d job=JOBID
+
+以下部分介绍Scrapyd JSON API中的可用资源。
+
+daemonstatus.json
+检查服务的负载状态。
+
+支持的请求方法： GET
+示例请求：
+
+卷曲 http ：// localhost ：6800 / daemonstatus 。JSON
+响应示例：
+
+{  “status” ： “ok” ， “running” ： “0” ， “pending” ： “0” ， “finished” ： “0” ， “node_name” ： “node-name”  }
+addversion.json
+将版本添加到项目中，如果项目不存在则创建该项目。
+
+支持的请求方法： POST
+参数：
+project （字符串，必需） - 项目名称
+version （字符串，必需） - 项目版本
+egg （文件，必需） - 一个包含项目代码的Python蛋
+示例请求：
+
+$ curl http：// localhost：6800 / addversion.json -F project = myproject -F version = r23 -F egg=@myproject.egg
+响应示例：
+
+{ “status” ： “ok” ， “蜘蛛” ： 3 }
+注意
+
+Scrapyd使用distutils LooseVersion来解释您提供的版本号。
+
+必要时，将默认使用项目的最新版本。
+
+schedule.json和listspiders.json允许您明确设置所需的项目版本。
+
+schedule.json
+安排蜘蛛跑（也称为工作），返回作业ID。
+
+支持的请求方法： POST
+参数：
+project （字符串，必需） - 项目名称
+spider （字符串，必需） - 蜘蛛名称
+setting （字符串，可选） - 运行蜘蛛时使用的Scrapy设置
+jobid （字符串，可选） - 用于标识作业的作业ID，将覆盖默认生成的UUID
+_version （字符串，可选） - 要使用的项目版本
+任何其他参数都作为蜘蛛参数传递
+示例请求：
+
+$ curl http：// localhost：6800 / schedule.json -d project = myproject -d spider = somespider
+响应示例：
+
+{ “status” ： “ok” ， “jobid” ： “6487ec79947edab326d6db28a2d86511e8247444” }
+传递spider参数（arg1）和设置（DOWNLOAD_DELAY）的示例请求：
+
+$ curl http：// localhost：6800 / schedule.json -d project = myproject -d spider = somespider -d setting = DOWNLOAD_DELAY = 2 -d arg1 = val1
+注意
+
+计划使用scrapyd的蜘蛛应允许任意数量的关键字参数，因为scrapyd会将内部生成的蜘蛛参数发送给正在调度的蜘蛛
+
+cancel.json
+新版本0.15。
+
+取消蜘蛛跑（又名作业）。如果作业正在等待，它将被删除。如果作业正在运行，它将被终止。
+
+支持的请求方法： POST
+参数：
+project （字符串，必需） - 项目名称
+job （字符串，必需） - 作业ID
+示例请求：
+
+$ curl http：// localhost：6800 / cancel.json -d project = myproject -d job = 6487ec79947edab326d6db28a2d86511e8247444
+响应示例：
+
+{ “status” ： “ok” ， “prevstate” ： “running” }
+listprojects.json
+获取上传到Scrapy服务器的项目列表。
+
+支持的请求方法： GET
+参数：无
+示例请求：
+
+$ curl http：// localhost：6800 / listprojects.json
+响应示例：
+
+{ “status” ： “ok” ， “projects” ： [ “myproject” ， “otherproject” ]}
+listversions.json
+获取可用于某个项目的版本列表。版本按顺序返回，最后一个是当前使用的版本。
+
+支持的请求方法： GET
+参数：
+project （字符串，必需） - 项目名称
+示例请求：
+
+$ curl http：// localhost：6800 / listversions.json？project = myproject
+响应示例：
+
+{ “status” ： “ok” ， “versions” ： [ “r99” ， “r156” ]}
+listspiders.json
+获取某个项目的最后（除非被重写）版本中可用的蜘蛛列表。
+
+支持的请求方法： GET
+参数：
+project （字符串，必需） - 项目名称
+_version （字符串，可选） - 要检查的项目版本
+示例请求：
+
+$ curl http：// localhost：6800 / listspiders.json？project = myproject
+响应示例：
+
+{ “status” ： “ok” ， “蜘蛛” ： [ “spider1” ， “spider2” ， “spider3” ]}
+listjobs.json
+新版本0.15。
+
+获取某个项目的挂起，正在运行和已完成的作业列表。
+
+支持的请求方法： GET
+参数：
+project （字符串，选项） - 将结果限制为项目名称
+示例请求：
+
+$ curl http：// localhost：6800 / listjobs.json？project = myproject | python -m json.tool
+响应示例：
+
+{ 
+    “地位” ： “OK” ，“
+    待定” ： [ 
+        { 
+            “项目” ： “MyProject的” ， “蜘蛛” ： “spider1” ，
+            “ID” ： “78391cc0fcaf11e1b0090800272a6d06” 
+        } 
+    ]， 
+    “ 跑” ： [ 
+        { 
+            “ID” ： “422e608f9f28cef127b3d5ef93fe9399” ，
+            “project” ： “myproject” ， “spider” ： “spider2” ，
+            “start_time” ： “2012-09-12 10：14：03.594664” 
+        } 
+    ]，
+    “完成” ： [
+        { 
+            “id” ： “2f16646cfcaf11e1b0090800272a6d06” ，
+            “project” ： “myproject” ， “spider” ： “spider3” ，
+            “start_time” ： “2012-09-12 10：14：03.594664” ，
+            “end_time” ： “2012-09 -12 10：24：03.594664“ 
+        } 
+    ] 
+}
+注意
+
+所有作业数据都保存在内存中，并在Scrapyd服务重新启动时重置。见问题12。
+
+delversion.json
+删除一个项目版本。如果给定项目没有更多版本可用，该项目也将被删除。
+
+支持的请求方法： POST
+参数：
+project （字符串，必需） - 项目名称
+version （字符串，必需） - 项目版本
+示例请求：
+
+$ curl http：// localhost：6800 / delversion.json -d project = myproject -d version = r99
+响应示例：
+
+{ “status” ： “ok” }
+delproject.json
+删除一个项目及其所有上传版本。
+
+支持的请求方法： POST
+参数：
+project （字符串，必需） - 项目名称
+示例请求：
+
+$ curl http：// localhost：6800 / delproject.json -d project = myproject
+响应示例：
+
+{ “status” ： “ok” }
+
+
+五.为了方便查看项目运行情况安装gerapy进行 监控（此框架在centos7上安装失败，可以在本机安装进行测试）
+
+pip3 install gerapy
+
+1.安装成功后在任意目录下执行gerapy init ，建议在好寻找的目录下，可以自己创建一个文件目录
+
+2.执行完毕再执行数据库迁移操作
+gerapy migrate
+会得到一个db.sqlite3（表明成功）
+(py3env) zhangmengen@zhangmengen-Default-string:~/Downloads/gerapys/gerapy$ ls
+db.sqlite3  projects
+
+3.运行gerapy
+
+gerapy runserver
+(py3env) zhangmengen@zhangmengen-Default-string:~/Downloads/gerapys/gerapy$ gerapy runserver
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 02, 2018 - 09:55:59
+Django version 2.0.3, using settings 'gerapy.server.server.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.（表明成功）
+
+4. 在浏览器中输入
+127.0.0.1:8000进行访问
+
+
+http://baijiahao.baidu.com/s?id=1593645153321812351&wfr=spider&for=pc （此链接为gerapy操作流程）
+
+
+如有操作问题标明问题，我再进行更改。
+
+

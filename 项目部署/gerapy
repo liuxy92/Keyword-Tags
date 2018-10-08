@@ -1,0 +1,30 @@
+  gerapy安装
+
+1.安装命令
+pip3 install gerapy
+
+2.安装过后测试
+输入gerapy命令
+得到
+Usage:
+
+  gerapy init [--folder=<folder>]
+
+  gerapy migrate
+
+  gerapy createsuperuser
+
+  gerapy runserver [<host:port>]
+
+  gerapy makemigrations
+安装成功
+3.初始化
+gerapy init
+4.会生成在本地生成一个gerapy 的文件夹，接着进入该文件夹，可以看到有一个 projects 文件夹，
+5.数据库初始化
+cd gerapy
+gerapy migrate 会在 gerapy 目录下生成一个 SQLite 数据库，同时建立数据库表。
+6.运行命令启动服务
+gerapy runserver
+7.可以在浏览器窗口打开 127.0.0.1:8000，进入Gerapy的主界面
+
