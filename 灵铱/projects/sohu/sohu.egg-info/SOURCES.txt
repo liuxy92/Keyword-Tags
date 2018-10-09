@@ -1,0 +1,13 @@
+setup.py
+sohu/__init__.py
+sohu/items.py
+sohu/middlewares.py
+sohu/pipelines.py
+sohu/settings.py
+sohu.egg-info/PKG-INFO
+sohu.egg-info/SOURCES.txt
+sohu.egg-info/dependency_links.txt
+sohu.egg-info/entry_points.txt
+sohu.egg-info/top_level.txt
+sohu/spiders/__init__.py
+sohu/spiders/sohus.py

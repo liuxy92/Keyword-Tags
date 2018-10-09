@@ -1,0 +1,4 @@
+爆米花视频不能打包部署，只能通过后台运行
+
+可以通过: nohup python main.py > run.log 2>&1 &
+

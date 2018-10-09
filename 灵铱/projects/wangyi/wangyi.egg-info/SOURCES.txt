@@ -1,0 +1,13 @@
+setup.py
+wangyi/__init__.py
+wangyi/items.py
+wangyi/middlewares.py
+wangyi/pipelines.py
+wangyi/settings.py
+wangyi.egg-info/PKG-INFO
+wangyi.egg-info/SOURCES.txt
+wangyi.egg-info/dependency_links.txt
+wangyi.egg-info/entry_points.txt
+wangyi.egg-info/top_level.txt
+wangyi/spiders/__init__.py
+wangyi/spiders/wangyis.py

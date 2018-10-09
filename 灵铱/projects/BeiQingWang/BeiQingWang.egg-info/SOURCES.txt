@@ -1,0 +1,14 @@
+setup.py
+BeiQingWang/__init__.py
+BeiQingWang/file_model.py
+BeiQingWang/items.py
+BeiQingWang/middlewares.py
+BeiQingWang/pipelines.py
+BeiQingWang/settings.py
+BeiQingWang.egg-info/PKG-INFO
+BeiQingWang.egg-info/SOURCES.txt
+BeiQingWang.egg-info/dependency_links.txt
+BeiQingWang.egg-info/entry_points.txt
+BeiQingWang.egg-info/top_level.txt
+BeiQingWang/spiders/__init__.py
+BeiQingWang/spiders/bspider.py

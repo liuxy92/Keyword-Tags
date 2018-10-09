@@ -1,0 +1,14 @@
+setup.py
+LiShiPin/__init__.py
+LiShiPin/file_model.py
+LiShiPin/items.py
+LiShiPin/middlewares.py
+LiShiPin/pipelines.py
+LiShiPin/settings.py
+LiShiPin/spiders/__init__.py
+LiShiPin/spiders/liSpider.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt

@@ -1,0 +1,15 @@
+setup.py
+HuaShang/__init__.py
+HuaShang/file_model.py
+HuaShang/items.py
+HuaShang/middlewares.py
+HuaShang/pipelines.py
+HuaShang/settings.py
+HuaShang/start_url.py
+HuaShang.egg-info/PKG-INFO
+HuaShang.egg-info/SOURCES.txt
+HuaShang.egg-info/dependency_links.txt
+HuaShang.egg-info/entry_points.txt
+HuaShang.egg-info/top_level.txt
+HuaShang/spiders/__init__.py
+HuaShang/spiders/spider.py

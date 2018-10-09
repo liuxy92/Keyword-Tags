@@ -1,0 +1,1971 @@
+1.2018.3.12-2018.3.16工作汇报:
+	上周前两天主要搭配系统环境,安装一些常用的工具,后面还连接了mysql数据库,在电脑上安装了navicat数据库可视图话的工具,周四周五主要都是在编写爬取光明网的爬虫代码,以及将爬取的数据存储到局域网mysql数据库.
+
+2.2018.3.19-2018.3.23工作汇报:
+	(1)3.19
+		今天上午,主要是解决数据存储到数据库的问题题并解决;下午主要将爬虫代码进行优化,并找了十几个将要爬取的网站.
+	(2)23.20
+		上午主要对环球网,腾讯网网站进行信息爬取,下午爬取中国政府王关于法律法规这部分的内容,并将数据入库.
+	(3)23.21
+		上午将法律的网站做了去全站的数据爬取,下午将数据存储到了数据库,另外找了一个法律法规的网站,基本框架已经搭好.
+	(4)3.22
+		今天上午主要编写爬取中国法律法规网站的代码,并在上午将进行了入库,下午爬取了环球网的网站,运行并将数据入库,腾讯网模块爬取正在进行.
+	本周总结:
+	爬取页面的时候,最好是先将一个大类的url获取到,在解析页面中的内容获取自己需要的信息;当不能通过起始url获取到 有用信息时,通过找出爬取的文章id是否是自增的,来写一个循环对内容进行抓取.本周主要爬取了法律的网站和资讯模块的网站,法律的网站数据已经可以入库,资讯的网站还有三个没有完成;在接下来的一周,把资讯模块网站结尾.
+
+3.2018.3.26-2018.3.30工作汇报:
+	(1)3.26
+		今天上午,与蒙恩一起将爬取法律法规的网站的项目部署到服务器上,代码在本地能够爬取数据,但是部署到服务器上就爬取的数据为空,原因在于不能原来代码起始的url已经全部规定死了,没有按照规则让框架去提取url;改写成start_urls后就没有问题了,还爬取了台海网的数据.
+	(2)3.27
+		1).抓取腾讯网网页数据,内容是通过js加载的,首先获取到网页数据接口,再通过正则获取内容信息,解码
+		2).找了一些小视频的网站
+	(3)3.28
+		1).navicat试用期14天,当过期后,在电脑的根目录下有一个隐藏的文件:.navicat64,将这个文件删除,navicat使用期限从此刻往后推十四天.
+		2).规范了咨询网站的字段要求
+		3).安装了MySQL workbench; 安装链接:https://blog.csdn.net/chenhaifeng2016/article/details/78173556
+	(4)3.29
+		1)将环球网的所需字段做到了全站爬取,思路:将每一个大的分类写成一个py文件,然后在最外面的project项目文件下,编写一个文件脚本,启动每一个spiders下的py文件;
+		2)将视频的网站进行了过滤
+	(5)3.30
+		1)抓取的字段内容必须要存在(包括空),否则会报错,可以加一个判断,if/else.
+		2)将环球网代码优化,并将文章中的图片抓取入库,需要安装fdfs_client-py 1.2.6,详情见:https://pypi.python.org/pypi/fdfs_client-py/1.2.6,
+		注意:指定python3版本
+		本周总结:本周的主要是将法律,咨询代码进行优化,并将图片抓取入库,完善数据格式,配置环境.
+
+4.2018.4.2-2018.4.4工作汇报:
+	(1)4.2
+		1)完成了上个月的工作汇报,并制定了下个月的工作目标
+		2)继续抓取资讯模块的网站
+		3)在将图片入库时,需要安装fdfs_client-py库,制定python3版本,安装完成后测试时如果报错,将fdfs_client复制到制定目录下替换原来的文件
+
+    (2)4.3
+        1)搭建centOS生产环境
+        2)完善大公网,台海网代码
+    (3)4.3
+        1)对爬取的数据进行处理,字符串中不需要的内容可以用replace()函数替换,对需要的数据可以通过下标索引的方式获取
+        2)去除内容中开头和结尾的空格,用strip()函数处理
+        
+        本周总结:在尝试搭建centOS服务器时遇到一些困难,对网站数据的抓取方面基本没有问题了
+        
+5.2018.4.8-2018.4.13工作汇报
+    (1)4.8
+        1)在生产环境下测试项目基本没有问题
+        2)网站数据抓取量,在不设置时间的情况下,半个小时能抓取1000条数据
+    (2)4.9
+        1)搭建centOS成功,测试项目还不能完全运行
+        2)编写sql查询语句
+        3)查找爬取小视频网站的代码
+    (3)4.10
+        1)部署光明网,大公网,台海网项目到测试环境,爬取数据光明网,大公网数据没有问题
+        2)centOS7服务器搭建完成
+    (4)4.11
+        1)    def process_item(self, item, spider):
+        # 数据库去重
+        self.cursor.execute("SELECT * FROM tbl_NewsDetails WHERE NewsTitle = '%s'" % item['NewsTitle'])
+        cam_rows = self.cursor.fetchone()
+        if cam_rows is not None:
+            print('数据已存在')
+            print('=========================')
+            pass
+
+        # 数据库插入新行数据
+        else:
+            sql1 = 'insert into tbl_NewsDetails(NewsID,NewsCategory,SourceCategory,NewsType,NewsTitle,NewsContent,NewsRawUrl,SourceName,AuthorName,InsertDate,NewsDate,NewsClickLike,NewsBad,NewsRead,NewsOffline) ' \
+                   'VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            sql2 = 'insert into tbl_NewsFileManager(FileID, FileType, FileDirectory, FileDirectoryCompress, FileDate, FileLength, FileUserID, Description, NewsID,image_url)' \
+                   'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            try:
+                # 删除内容和标题为空的数据
+                if item['NewsTitle'] == '' or item['NewsContent'] == '':
+                    self.cursor.execute('DELETE FROM tbl_NewsDetails WHERE NewsID=%s' % item["NewsID"])
+
+                # 执行sql语句
+                self.cursor.execute(sql1, (
+                    item['NewsID'], item['NewsCategory'], item['SourceCategory'], item['NewsType'], item['NewsTitle'],
+                    item['NewsContent'], item['NewsRawUrl'], item['SourceName'], item['AuthorName'], item['InsertDate'],
+                    item['NewsDate'], item['NewsClickLike'], item['NewsBad'], item['NewsRead'], item['NewsOffline']))
+
+                for dic in item['FileList']:
+                    self.cursor.execute(sql2, (
+                        dic['FileID'], dic["FileType"], dic["FileDirectory"], dic["FileDirectoryCompress"],
+                        dic["FileDate"],
+                        dic["FileLength"], dic["FileUserID"], dic["Description"], dic["NewsID"], dic["image_url"]
+                    ))
+                self.conn.commit()
+            except Exception as e:
+                print(e)
+                print("执行sql语句失败")
+
+            return item
+    (5)4.12
+        1)
+        本地安装redis服务器端
+        sudo apt-get install redis-server
+        
+        检查Redis服务器系统进程
+        ps -aux|grep redis
+        
+        通过启动命令检查Redis服务器状态
+        netstat -nlt|grep 6379
+        
+        通过启动命令检查Redis服务器状态
+        sudo /etc/init.d/redis-server status
+        
+        启动redis
+        进入到redis根目录下的src目录下
+        ./redis-server
+        
+        通过命令行客户端访问Redis
+        redis-cli
+        
+        2)
+        安装redis视图化界面工具
+        
+        1.  wget https://launchpadlibrarian.net/217261845/libicu52_52.1-8ubuntu0.2_amd64.deb
+        2.  http://pan.baidu.com/s/1cA3jWU  #下载包
+        3.  sudo dpkg -i libicu52_52.1-8ubuntu0.2_amd64.deb
+            sudo apt-get -f install 
+            sudo apt-get install zlib1g-dev
+            sudo dpkg -i redis-desktop-manager_0.8.3-120_amd64.deb (在redis-desktop-manager_0.8.3-120_amd64.deb所在文件夹下执行)
+            /usr/share/redis-desktop-manager/bin/rdm  （启动命令）
+        3)
+        1 redis 启动
+        进入src目录下，执行./redis-server & (带上&是在后台启动)
+        
+        2 redis关闭
+        进入src目录下，执行./redis-cli shutdown
+        
+        3 远程连接redis服务器
+        ./redis-cli -h redis服务器IP -p 6379 (默认端口)
+    (6)4.13
+        1)数据存储到redi
+            def __init__(self):
+        # 连接Redis
+        print('连接Redis')
+        self.red = redis.Redis(host="127.0.0.1", port=6379, db=0)
+        print('连接Redis成功')
+        self.pipe = self.red.pipeline()
+        
+            def process_item(self, item, spider):
+        # Redis存储数据
+        if item['NewsTitle'] == '' or item['NewsContent'] == '':
+            del (item['NewsID'], item['NewsCategory'], item['SourceCategory'], item['NewsType'], item['NewsTitle'],
+                 item['NewsContent'], item['NewsRawUrl'], item['SourceName'], item['AuthorName'], item['InsertDate'],
+                 item['NewsDate'], item['NewsClickLike'], item['NewsBad'], item['NewsRead'], item['NewsOffline'])
+        else:
+            self.red.lpush('pynews' + item['NewsCategory'], item)
+            
+        2)部署大公网项目到生产环境
+        
+        本周工作总结:
+            (1)搭建centOS服务器成功,并在服务器上测试光明网、大公网、台海网、环球网等项目。
+            (2)编写数据库查询语句
+            (3)通过编写sq语句,完成了数据库数据去重任务
+            (4)将数据存储到redis
+            (5)将光明网,大公网部署到生产环境上并顺利运行
+6.2018.04.16-2018.04.20
+    (1)04.16
+        1)爬取小视频网站,第一视频
+        2)优化光明网代码,修改sql去重语句
+        详情请参考:https://blog.csdn.net/rockyvan/article/details/2461385
+    (2)04.17
+        1)第一视频网全站爬取,存储数据库
+        2)部署光明网,台海网到生产环境
+    (3)04.18
+        1)在对网站进行新闻链接抓取的时候,遍历链接时最好不要讲其他的item字段写在该解析函数下面,最好是url独自占一个解析函数,否则会报错
+            def parse_url(self, response):
+        item = response.meta['item']
+        links = response.xpath('//div[starts-with(@class,"elem ov")]/a/@href').extract()
+        for link in links:
+
+            yield scrapy.Request(url=str(link), callback=self.parse_info, meta={'item': item})
+
+
+        def parse_info(self, response):
+            item = response.meta['item']
+            item['NewsID'] = str(uuid.uuid1())
+            item['NewsType'] = 0
+            item['NewsClickLike'] = 0
+            item['NewsBad'] = 0
+            item['NewsRead'] = 0
+            item['NewsOffline'] = 0
+        2)部署第一视频,参考消息两个项目到生产环境
+    (4)04.19
+        1)抓取投资界抓取找项目的网页
+        2) div_list1 = response.xpath('//div[@class="pad30 detail-info"]/div/dl//text()').extract()
+        ret = [str for str in div_list1 if str not in ['\r\n\t\t\t\t', '\r\n\t\t\t']]
+        string = ''.join(str1 for str1 in ret)
+        列表去除不需要的元素,并转换成字符串
+    (5)04.20
+        1)正则匹配一个div模块下的自己需要的内容
+            def parse_info(self, response):
+        item = response.meta['item']
+        div_list1 = response.xpath('//div[@class="pad30 detail-info"]/div/dl')
+        # print(response.url)
+        FundUse = div_list1.re('<dt>融资用途：</dt>\r\n\t\t\t\t<dd title=".*">')
+        # print(FundUse)
+        if FundUse is not []:
+            try:
+                item['FundUse'] = item['FundUse'] = FundUse[0].split('title="')[-1].split('">')[0]
+            except:
+                item['FundUse'] = None
+        else:
+            item['FundUse'] = None
+        2)如果遇到不正规的页面,用正则或者xpath均匹配不到,就需要用try的方法进行抛错处理,将不正规的页面过滤掉
+        3)for循环是不保存数据内容的,所以用多次if判断进行赋值操作的是错误的
+        div_list1 = response.xpath('//div[@class="pad30 detail-info"]/div/dl//text()').extract()
+        ret = [str for str in div_list1 if str not in ['\r\n\t\t\t\t', '\r\n\t\t\t']]
+        string = ''.join(str1 for str1 in ret)
+        print(string)
+        a = string.split()
+        for b in a:
+            # print(b)
+            c = b.split('：')[0]
+            # print(c)
+            d = ''.join(j for j in [n for n in b[5:]])
+            if '融资用途' == c:
+                item['FundUse'] = d
+            # else:
+            #     item['FundUse'] = None
+            #     print(item['FundUse'])
+            if '融资资金' in c:
+                item['FundFinance'] = d
+            # else:
+            #     item['FundFinance'] = None
+    
+    工作总结: 
+    1)首先将第一视频,视频网站进行数据抓取,另外将参考信息网站进行抓取并将数据存储到公司数据库,
+    2)抓取投融界找项目网页的抓取,并将字段内容根据字典进行映射.
+
+7.2018.04.23-2018.04.28
+    (1)04.23
+        1)找项目,代码优化,将入库数据进行优化
+        2)数据映射:根据字典进行映射
+            div_list1 = response.xpath('//div[@class="pad30 detail-info"]/div/dl')
+            # 所属行业(多选)
+        IndustryCode = div_list1.re('<dt>所属行业：</dt>\r\n\t\t\t\t<dd title=".*">')
+        ic = num.Project_num['Data7']
+        if IndustryCode is not []:
+            try:
+                data = IndustryCode[0].split('title="')[-1].split('">')[0].strip()
+                # print(data)
+                list = data.split(' ')
+                ic_lsit = []
+                for l in list:
+                    number = ic[l]
+                    ic_lsit.append(number)
+                    item['IndustryCode'] = ','.join(ic_lsit)
+            except:
+                item['IndustryCode'] = None
+        else:
+            item['IndustryCode'] = None
+    (2)04.24
+        1)找项目数据完善,去空数据
+        2)将找资金项目的框架搭建好,并能顺利爬取数据
+    (3)04.25
+        1)通过正则匹配需要抓取的数据,并将需要的数据通过字典映射好数据的类型
+        2)将数据简单的入库,并在测试环境的App上查看数据的格式
+    (4)04.26
+        1)上午将找资金中城市和投资资金两个字典通过接口将数据映射成所需数据格式
+        2)下午将数据去空并存储到数据库,临下班将找资金的项目部署到测试环境上面
+        3)将资讯模块中国新闻网的框架搭建完成
+    (5)04.27
+        1)将中国新闻网项目完善,并部署到测试环境上面,
+        2)下午将中国新闻网项目部署到生产环境
+    (6)04.28
+        1)上午在网上查找寻找合伙人项目的网站,有铁杵网和缘创派两个网站,并将基本框架搭建完成
+        2)下午在抓取数据时,铁杵网数据抓取出现问题,去除了该网站,将缘创派网站抓取完毕,由于数据库不能链接,暂时数据没有做映射,和入库
+        3)正则匹配所需的内容
+        div_list1 = response.xpath('//div[@class="content"]/div[@class="main_body"]/dl/dd/span')
+        # 团队人数
+        item['TeamNum'] = div_list1.re_first('<span class="xmjj_wz f_l" id="tdqk">(.*?)</span>')
+        
+        4)当用xpath提取规则时,遇到::before或者::after,需要将匹配的标签写完整,不能省略该字符前的标签
+        
+        
+    工作总结:
+    (1)首先,将找资金,找项目的两个项目完善,并部署到测试环境抓取的数据能正常在手机客户端上显示
+    (2)抓取了中国新闻网,并将该项目部署到了生产环境上面,每天实时抓取动态新闻
+
+8.2018.05.02-2018.05.04
+    (1)05.02
+        1）将找合伙人模块的项目代码进行优化，并在本地测试，数据入库正常
+        2) 将4月份月报写完,以及五月份的任务
+    (2)05.03
+        1)启动scrapy
+        service scrapyd start
+        start at port:6800
+        2)优化找资金,找项目,找合伙人项目的代码,解决数据为空数据的去除操作;
+        3)当去空的时候,如果代码逻辑没有错误,但是当判断一个字段为空,去除该条数据数据时,其余的字段全部变为空值,这就需要我们检查网站数据,看是否这两个字段本身就是相互制约的,即当一个字段数据存在时,另一个字段数据不存在
+    (3)05.04
+        1)上午将找合伙人的个别字段去空问题解决了
+        2)下午将找项目,找资金,找合伙人等项目重新部署到生产环境
+        3)整理elasticsearch增删改查语句
+        
+    
+    工作总结:
+        1)将找项目,找资金模块项目代码重新优化,部署到生产环境
+        2)找合伙人项目完成并部署生产环境
+        3)elasticsearch数据增删改查语句整理
+        
+9.2018.05.07-2018.05.12
+    (1)05.07
+        1)上午,找合伙人项目因需要个人信息才能将项目数据从数据库调取出来,所以先将线上的项目停了
+        2)下午,查找公益活动与会展信息发布模块的网站,新展网大体字段都匹配,个别字段没有
+        3)将elasticsearch增删改查语句整理完成,发给国经理审核
+    (2)05.08
+        1)上午,搭建elasticsearch服务器,并安装了elasticsearch-head插件,便于将数据在浏览器上显示出来
+        2)下午,通过代码插入一些数据,在elasticsearch服务器上通过索引查询出来
+        3)初步将展会信息发布项目框架搭建起来
+    (3)05.09
+        1)通过python脚本操作elasticsearch数据的增删改查
+        from elasticsearch import Elasticsearch
+        from datetime import datetime
+        
+        # 连接elasticsearch,默认是9200
+        es = Elasticsearch(['172.18.113.113:9200'])
+        
+        # 创建索引，索引的名字是my-index,如果已经存在了，就返回个400，
+        # 这个索引可以现在创建，也可以在后面插入数据的时候再临时创建
+        # es.indices.create(index='my-index')
+        
+        # 插入数据
+        es.index(index="my-index", doc_type="test-type", id='01', body={"any": "data01", "timestamp": datetime.now()})
+        
+        # 也可以，在插入数据的时候再创建索引test-index
+        es.index(index="test-index", doc_type="test-type", id='42', body={"any": "data", "timestamp": datetime.now()})
+        
+        
+        # 查询数据，两种get and search
+        # get获取
+        res = es.get(index="my-index", doc_type="test-type", id='01')
+        # print(res)
+        # print(res['_source'])
+        
+        # search获取
+        res = es.search(index="test-index", body={"query": {"match_all": {}}})
+        # print(res)
+        
+        for hit in res['hits']['hits']:
+            print(hit["_source"])
+        res = es.search(index="test-index", body={'query': {'match': {'any': 'data'}}}) # 获取any=data的所有值
+        print(res)
+        
+        # # delete删除
+        # # 再删除数据时要将索引,类型,id全部删除
+        res = es.delete(index="test-index", doc_type="test-type", id='42')
+        print(res)
+        2)完善展会信息发布项目,
+    (4)05.10
+        1)上午继续优化会展发布信息项目,还差企业id等个别字段需要确认
+        2)下午找公益活动网站,
+        3)在生产环境上搭建centos7访问服务
+    (5)05.11
+        1)公益活动项目网站数据的抓取,抓取网站为豆瓣公益,数据主要存储在两个表里,公益图片存储在单独一个表里
+        2)数据映射:键--值,然后再用该值映射另一个字典里面的键,值--键
+        3)网站抓取速度过快,ip被封,i使用ip代理抓取
+        
+    工作总结:
+    (1)整理elasticsearch增删改查语句,并测试
+    (2)在本地搭建了elasticsearch数据查询服务,安装了elasticsearch-head插件
+    (3)在生产环境上搭建centos7访问服务
+    (4)完善公益活动,展会信息发布等项目
+10.2018.05.14-2018.05.18
+    (1)05.14
+    scrapy添加代理
+    settings.py文件其中的DOWNLOADER_MIDDLEWARES用于配置scrapy的中间件.我们可以在这里进行自己爬虫中间键的配置,配置后如下:
+
+    DOWNLOADER_MIDDLEWARES = {
+        'WandoujiaCrawler.middlewares.ProxyMiddleware': 100,
+    }
+    
+    我们的中间件优先级要高于默认的proxy中间键.中间件middlewares.py的写法如下(scrapy默认会在这个文件中写好一个中间件的模板,不用管它写在后面即可):
+
+    # -*- coding: utf-8 -*-
+    class ProxyMiddleware(object):
+        def process_request(self, request, spider):
+            request.meta['proxy'] = "http://proxy.yourproxy:8001"
+    (2)05.15
+        1)优化展会信息发布,公益活动等项目代码
+        
+        错误:
+        Err] 1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''[Rank]' Int(11) NOT NULL DEFAULT '1',
+        错误原因:
+        1.代码字段类型与数据库表中字段类型不符
+        2.管道文件pipline中sql语句书写不正确,字段不对应
+        3.sql语句中间有空格等字符,
+        解决方法:
+        1.一个字段一个字段比对赋值测试,直到成功为止
+        2.仔细比对每个字段,不要少也不要多
+        3.将所有字段写在一行里面,不要换行
+    
+        2)在线上服务器10.100.101.150上搭建centos系统,将安装gerapy,scrapyd框架,并测试成功
+    
+    (3)05.16
+        1)如果爬虫文件在本地环境下测试时链接不上数据库,将以下代码注释掉
+        # import io
+        # import sys
+        # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+        2)A表中的自增主键作为B表中的关联键,
+        sql1 = 'insert into book_management.benefit_activity(enterprise_id, enterprise_name, activity_title, activity_intro, activity_category_id, city_id, city_name, province_id, province_name, create_by_user_id, create_by_user_name, activity_state, is_available, remark, money_num, end_date, gmt_create, gmt_modified)' \
+                           'VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    
+        # 获取benefit_activity刚插入的自增id
+        sql = 'SELECT @@IDENTITY'
+    
+        sql2 = 'insert into book_management.trade_file(relation_id,file_name,file_url,image_compress_url,info_type,is_available,create_by_user_id,create_by_user_name,gmt_create,gmt_modified)' \
+               ' VALUES(@@IDENTITY,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    
+        try:
+            # 执行sql语句
+            self.cursor.execute(sql1, (item['enterprise_id'], item['enterprise_name'], item['activity_title'], item['activity_intro'], item['activity_category_id'], item['city_id'], item['city_name'], item['province_id'], item['province_name'], item['create_by_user_id'], item['create_by_user_name'], item['activity_state'], item['is_available'], item['remark'], item['money_num'], item['end_date'], item['gmt_create'], item['gmt_modified']))
+    
+            self.cursor.execute(sql)
+    
+            self.cursor.execute(sql2, (
+                item['listFiles']['file_name'],item['listFiles']['file_url'],
+                item['listFiles']['image_compress_url'],item['listFiles']['info_type'],
+                item['listFiles']['is_available'], item['listFiles']['create_by_user_id'],
+                item['listFiles']['create_by_user_name'], item['listFiles']['gmt_create'],
+                item['listFiles']['gmt_modified']))
+    
+            self.conn.commit()
+            
+    (4)05.17
+        1)解决了找资金,找项目所在地区字段精确到市的问题,抓取的测试数据在手机端正常显示
+        if判断条件时要从最小的条件开始判断,逐层往外判断,这样不容易漏掉条件
+        2)与后端开发人员交互数据,确认下周与前段碰面,将具体字段完善后将项目部署生产环境
+        
+    (5)05.18
+        1)上午安装了kibana,Kibana 是一个开源的分析和可视化平台，旨在与 Elasticsearch 合作。Kibana 提供搜索、查看和与存储在 Elasticsearch 索引中的数据进行交互的功能。开发者或运维人员可以轻松地执行高级数据分析，并在各种图表、表格和地图中可视化数据。
+        2)下午通过python脚本文件,将scrapy数据存储到elasticsearch中
+            I.新建es_type.py文件夹,我们在里面定义文章的类型
+            
+            # -*- coding:utf-8 -*-
+    
+            from elasticsearch_dsl import DocType,Nested,Date,Boolean,analyzer,Completion,Text,Keyword,Integer
+            from elasticsearch_dsl.connections import connections
+            
+            # 新建连接
+            connections.create_connection(hosts="172.18.113.113")
+            
+            class ArticleType(DocType):
+                # 文章类型
+                NewsID = Keyword()
+                NewsCategory = Keyword()
+                SourceCategory = Keyword()
+                NewsType = Integer()
+                NewsTitle = Keyword()
+                NewsContent = Keyword()
+                NewsRawUrl = Keyword()
+                SourceName = Keyword()
+                InsertDate = Date()
+            
+                class Meta:
+                    # 数据库名称和表名称
+                    index = "lynews"
+                    doc_type = "tbl_NewsDetails"
+            
+            if __name__ == '__main__':
+                ArticleType.init()
+                
+            **注意:字段类型是Text(analyzer="ik_max_word")会建表报错,主要用于分词搜索,可以换成Keyword()
+                
+            
+            II.把爬取的数据保存至elasticsearch
+            
+            class ElasticsearchPipeline(object):
+            #将数据写入到es中
+        
+            def process_item(self, item, spider):
+                #将item转换为es的数据
+                item.save_to_es()
+        
+                return item
+                
+            
+            III.items.py 中将数据保存至es
+            
+            def save_to_es(self):
+            
+            article = ArticleType()
+            article.NewsID = self['NewsID']
+            article.NewsCategory = self['NewsCategory']
+            article.SourceCategory = self['SourceCategory']
+            article.NewsType = self['NewsType']
+            article.NewsTitle = self['NewsTitle']
+            article.NewsContent = self['NewsContent']
+            article.NewsRawUrl = self['NewsRawUrl']
+            article.SourceName = self['SourceName']
+            article.InsertDate = self['InsertDate']
+    
+            # article.suggest = gen_suggests(ArticleType._doc_type.index, ((article.title, 10), (article.tags, 7)))
+    
+            article.save()
+    
+            # redis_cli.incr("jobbole_count")
+    
+            return
+            
+    工作总结:
+    (1)优化找资金,找项目等模块项目代码,项目已经可以部署到生产环境
+    (2)找合伙人项目个人信息模块与项目模块不能关联起来,目前还没解决方法
+    (3)展会信息发布,公益活动项目还差企业id字段需要完善,另外公益活动项目数据具体信息还不能展示
+    (4)爬取数据存储到elasticsearch中,熟悉增删改查语句操作
+    
+11.2018.05.21-2018.05.25
+    (1)05.21
+        1)上午将上周代码整理优化,将项目在测试环境上设上定时任务
+        2)下午抓取学习模块中的美术模块,框架搭建完成
+    (2)05.22
+        1)美术模块项目完成,并将部署到测试环境
+        2)抓取养生模块
+            抓取小分类模块下一页操作
+                def parse_item(self, response):
+            item = MeishuwangprojectItem()
+            cg = Category()
+            cate = cg.type_list['list']
+            LRCategory = response.xpath('//div[@id="ct"]/div/div[@class="bm"]/div/h1/text()').extract_first()
+            try:
+                if LRCategory in cate.keys():
+                    item['LRCategory'] = cate[LRCategory]
+                else:
+                    item['LRCategory'] = ''
+            except:
+                pass
+    
+            item['LRSourceCategory'] = '001.005'
+            item['LRType'] = 0
+            item['LRDate'] = response.xpath('//div[@class="bm"]/div/dl/dd/p/span/text()').extract_first() + ':00'
+            links = response.xpath('//span[@class="xs2a"]/a/@href').extract()
+            for link in links:
+    
+                yield scrapy.Request(url=link, callback=self.parse_info, meta={'item': item})
+    
+            # 获取下一页链接
+            next_url = response.xpath('//div[@class="pg"]/a[@class="nxt"]/@href').extract_first()
+            if next_url:
+                print('下一页', next_url)
+    
+                yield scrapy.Request(url=str(next_url), callback=self.parse_item)
+    (3)05.23
+        1)上午完善养生学习模块项目,数据入库
+        2)下午找了一些其他学习模块的网站,
+        在线上生产环境安装gerapy框架,部署项目报错,缺少增量爬取模块
+        安装增量爬取模块:
+        1.tar -zxvf db-5.3.28.tar.gz
+
+        2.cd db-5.3.28/
+        
+        3.dist/configure
+        
+        4.make
+        
+        5.make install
+        
+        pip install scrapy-deltafetch
+    (4)05.24
+        1)在本地安装增量爬取模块报错
+        错误:/etc/apt/source.list源码文件有错误,更换source.list,安装所需的依赖包gcc等
+        
+        在原来项目上添加增量爬去功能
+        settings.py
+        用Pycharm打开生成的项目，编辑settings.py，添加如下内容：
+        
+        SPIDER_MIDDLEWARES = { 
+        ‘scrapy_deltafetch.DeltaFetch’: 100 
+        } 
+        DELTAFETCH_ENABLED = True
+        2)抓取盆栽养殖学习模块,数据入库,将养生学习和盆栽养殖项目部署到测试环境并作定时
+        
+    (5)05.25
+        elasticsearch存储去重
+        pipline.py文件写成多个管道,会出现权重的问题,将elasticsearch与MySQL放在同一管道下面,数据库目前去重语句报错
+
+    工作总结:
+        1)线上搭建部署框架,gerapy启动
+            cd gerapy
+            gerapy runserver 10.100.101.150:8001
+            启动gerapy需要指定IP和端口号,8000端口号可能被占用,换一个端口号,再在浏览器输入10.100.101.150:8001进入gerapy界面,手动管理线上项目\
+        2)抓取了养生,美术,盆栽三个学习模块的网站数据,项目测试没有问题
+        3)在原有项目中添加增量爬取模块
+        4)elasticsearch去重问题正在解决
+
+12.2018.05.28-2018.06.01
+    (1)05.28
+        elasticsearch去重操作:
+        将elasticsearch单独写在一个管道文件里,不需要在数据库里取出数据进行比较,只要设置elasticsearch的管道权重大于MySQL的管道权重即可,
+        理由-因为从spiders爬虫文件传到piplines.py中的item先经过mysql管道处理,有重复数据或者某些字段为空的数据,就已经将数据删除点,不会再传到elasticsearch下面,只需判断item是否为真,即可
+        
+        class ElasticsearchPipeline(object):
+        def __init__(self):
+            # 连接elasticsearch,默认是9200
+            self.es = Elasticsearch(['172.18.113.113:9200'])
+    
+            # 将数据写入到es中
+            def process_item(self, item, spider):
+                """
+                判断传入的item是否存在,可能再通过数据库操作的时候已经删除
+                """
+                if item:
+                    # 将item转换为es的数据
+                    item.save_to_es()
+        
+                    return item
+                else:
+                    print('item不存在')
+        
+                    pass
+    (2)05.29
+        1)查看elasticsearch集群搭建的文档
+        2)查看MySQL数据与elasticsearch数据同步的文档,并在本地环境测试安装
+        3)找了一些设计模块的网站
+    (3)05.30
+        1)将原来的咨询项目都加上上了es存储机制
+        2)下午,将咨询和学习模块的项目打包到gerapy目录下的projects文件夹下,批量打包,并部署到服务器上,
+        3)通过crontab -e命令在本地写定时文件
+        * 18 * * * curl http://172.18.113.108:6800/schedule.json -d project=ChinaNewsProject -d spider=ChinaNews /home/user/gerapy/projects/ChinaNewsProject >> /home/user/gerapy/logs/ChinaNews.log
+    (4)5.31
+        1)上午搭建elasticsearch集群,在172.18.113.108服务器上搭建的集群,还添加了172.18.113.111这台服务器做es数据存储的节点
+        2)下午将昨天部署在gerapy上的项目删除,有错误,需要安装模块
+    (5)06.01
+        修改咨询模块项目代码，将抓取规则修改成之抓取2018年的数据，将所有咨询模块的项目都整合到一个项目下的spiders.py爬虫文件中
+    
+    工作总结:
+        1)完成elasticsearch数据重复的问题,增设elasticsearch管道,将其权重大于mysql管道的权重
+        2)搭建elasticsearch集群
+        3)优化咨询项目代码
+13.2018.06.04-2018.06.08
+    (1)06.04
+    整理咨询网站,将台海网的咨询项目整合成一个爬虫项目,一个爬虫文件全站爬取
+    (2)06.05
+    将光明网,环球网,大公网三个咨询项目重新进行代码优化,并将添加了文化,公益,教育等字段,并将光明,台海,大公,环球四个咨询项目部署测试环境测试
+    (3)06.06
+        1)解决了咨询模块内容中图片链接没有被替换的问题
+        if image_urls:
+        for image_url in image_urls:
+            if '?' in image_url:
+                image_url_new = image_url.split('?')[0]
+            else:
+                image_url_new = image_url
+            a = File_mod(image_url_new, content)
+            content = a.detail_file()
+            if 'v1' in image_url:
+                full_name = a.Download_video()
+            else:
+                full_name = a.Download_image()
+        2)获取到的图片链接有些不完整,进行拼接
+        from urllib.parse import urljoin
+        
+        if image_urls:
+        for image_url in image_urls:
+            # 1\存储图片到本地
+            # 拼接完整的图片链接
+            if 'http:' not in image_url:
+                image_url2 = urljoin(response.url, str(image_url))
+            else:
+               image_url2 = image_url
+    (4)06.07
+        1)将光明网项目中内容字段最后标签中光明网跳转链接的logo的链接替换空
+        cont = ''.join(response.xpath(
+                    '//div[@id="contentMain"]//p | //div[@id="ArticleContent"]/div/p | //div[@id="contentMain"]/p'
+                ).extract())
+            if 'https://img.gmw.cn/pic/content_logo.png' in cont:
+                content = cont.replace('https://img.gmw.cn/pic/content_logo.png', '')
+            else:
+                content = cont
+        2)完善elasticsearch集群,查看es后台启动的文档
+        3)测试修改后的咨询项目
+    
+    (5)06.08
+        1)上午将所有咨询项目代过了一遍,将新闻不在更新的频道剔除,只抓取文本的详情页
+        2)下午将整理的咨询项目部署在测试环境上,并做定时
+        # 测试服务器上的定时
+        0 17 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=ChinaNews /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/ChinaNews.log
+        0 19 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=TaKungPao /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/TaKungPao.log
+        0 20 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=GuangMing /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/GuangMing.log
+        0 22 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=CanKao /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/CanKao.log
+        0 1 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=TaiHai /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/TaiHai.log
+        0 4 * * * curl http://172.18.113.111:6800/schedule.json -d project=NewsProject -d spider=HuanQiu /home/centos/zmj/NewsProject >> /home/centos/zmj/logs/HuanQiu.log
+        3)17.18.113.108测试服务器上报错
+        2018-06-08 16:56:12 [scrapy.downloadermiddlewares.retry] DEBUG: Retrying <GET http://www.cankaoxiaoxi.com/> (failed 2 times): DNS lookup failed: no results for hostname lookup: www.cankaoxiaoxi.com.
+        2018-06-08 16:56:26 [scrapy.downloadermiddlewares.retry] DEBUG: Gave up retrying <GET http://www.cankaoxiaoxi.com/> (failed 3 times): DNS lookup failed: no results for hostname lookup: www.cankaoxiaoxi.com.
+        2018-06-08 16:56:26 [scrapy.core.scraper] ERROR: Error downloading <GET http://www.cankaoxiaoxi.com/>
+        Traceback (most recent call last):
+          File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1384, in _inlineCallbacks
+            result = result.throwExceptionIntoGenerator(g)
+          File "/home/centos/py35env/lib/python3.5/site-packages/twisted/python/failure.py", line 408, in throwExceptionIntoGenerator
+            return g.throw(self.type, self.value, self.tb)
+          File "/home/centos/py35env/lib/python3.5/site-packages/scrapy/core/downloader/middleware.py", line 43, in process_request
+            defer.returnValue((yield download_func(request=request,spider=spider)))
+          File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+            current.result = callback(current.result, *args, **kw)
+          File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/endpoints.py", line 954, in startConnectionAttempts
+            "no results for hostname lookup: {}".format(self._hostStr)
+        twisted.internet.error.DNSLookupError: DNS lookup failed: no results for hostname lookup: www.cankaoxiaoxi.com.
+    
+    工作总结:
+    1)完成咨询项目代码的优化,解决文章内容中img url无法替换的问题
+    2)完善elasticsearch集群的改善,将172.18.113.108 ,172.18.113.111, 172.18.113.73搭建成集群,并测试数据可以存储
+
+14.2018.06.11-2018.06.15
+    (1)06.11
+        1)爬虫文件spiders.py中涉及到if判断来给某个字段赋值时,最好使用'==' 或 '!=" 比较符, 如果是 in 或 not in 可能程序无法识别导致赋值失败;
+            例子:
+            def parse_item(self, response):
+                # print(response.url)
+                item = NewsprojectItem()
+                link = response.url.split('.huanqiu.com')
+                ll = link[1].split('/2018')[0]
+                if 'http://world' == link[0] or 'http://oversea' == link[0]:
+                    if '/photo' == ll:
+                        item['NewsCategory'] = ''
+                    else:
+                        item['NewsCategory'] = '001.020'  # 国际
+                elif 'http://finance' == link[0]:
+                    if '/financepic' == ll:
+                        item['NewsCategory'] = ''
+                    else:
+                        item['NewsCategory'] = '001.007'  # 财经
+        2)测试环境DNS域名解析错误报错,原因可能是测试环境崩了
+        3)写学习模块宠物喂养项目,网站名称:为乐乐地带
+    (2)06.12
+        1)学习模块,宠物喂养项目写完,数据检测正常,入库正常
+            # 获取下一页链接
+            next = response.xpath('//div[@class="page"]/a[@class="next"]/@href').extract_first()
+            if next:
+                next_url = urljoin(response.url, next)
+                num = next_url.split('/list_')[1].split('.html')[0].split('_')[1]
+                if int(num) <= 10:
+                    print('下一页', next_url)
+                    
+                    yield scrapy.Request(url=next_url, callback=self.parse)
+        2)测试环境项目运行报错:
+        
+            2018-06-12 14:16:56 [scrapy.downloadermiddlewares.retry] DEBUG: Gave up retrying <GET http://baike.lelezone.com/pachong/> (failed 3 times): DNS lookup failed: no results for hostname lookup: baike.lelezone.com.
+            2018-06-12 14:16:56 [scrapy.core.scraper] ERROR: Error downloading <GET http://baike.lelezone.com/pachong/>
+            Traceback (most recent call last):
+              File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1384, in _inlineCallbacks
+                result = result.throwExceptionIntoGenerator(g)
+              File "/home/centos/py35env/lib/python3.5/site-packages/twisted/python/failure.py", line 408, in throwExceptionIntoGenerator
+                return g.throw(self.type, self.value, self.tb)
+              File "/home/centos/py35env/lib/python3.5/site-packages/scrapy/core/downloader/middleware.py", line 43, in process_request
+                defer.returnValue((yield download_func(request=request,spider=spider)))
+              File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/defer.py", line 653, in _runCallbacks
+                current.result = callback(current.result, *args, **kw)
+              File "/home/centos/py35env/lib/python3.5/site-packages/twisted/internet/endpoints.py", line 954, in startConnectionAttempts
+                "no results for hostname lookup: {}".format(self._hostStr)
+            twisted.internet.error.DNSLookupError: DNS lookup failed: no results for hostname lookup: baike.lelezone.com.
+            
+            原因:DNS配置有问题
+            
+            解决方案:
+            
+            可以vi /etc/resolv.conf，打开这个文件,一般会看到nameserver 192.168.1.1,改成自己公司的网段
+            
+            1 ; generated by /usr/sbin/dhclient-script
+            2 search openstacklocal novalocal
+            3 nameserver 202.106.0.20
+    (3)06.13
+        1)git操作
+            (1)首先在/home/user/ 目录下建立新的文件夹 liuzhiyong
+            (2)cd liuzhiyong/ 目录下,建立工作区文件夹 nodejs,今后克隆与合并项目都是在本目录下
+            (3)cd nodejs/
+                仓库初始化: git init
+                
+                将线上项克隆下来:  git clone git@172.18.113.92:guowei/LYSpider.git New
+            
+                查看当前分支是否在master主分支: git branch
+                
+                如果没有显示: * master
+                
+                执行下面命令: git fetch git@172.18.113.92:guowei/LYSpider.git master
+                
+                进入New目录:cd New --->> user@user-desktop:~/liuzhiyong/nodejs/New$ git branch
+                                   --->> * master
+                                   
+                所有的git操作都是在有 REEDME 的目录下进行
+                
+                --->>user@user-desktop:~/liuzhiyong/nodejs/New$ ls
+                --->>doc  New  packages  projects  REEDME
+                
+                创建属于自己的新的分支: git branch liuzhiyong
+                切换到新的分支: git checkout liuzhiyong
+                查看工作状态: git status
+                将代码提交到缓存区: git add .
+                确定修改代码的版本号: git commit -m "文字"
+                切换到主分支进代码合并: git checkout master
+                                        git merge liuzhiyong
+                如果是第一次提交,最好先git pull 一下,将线上项目与本地代码合并
+                如果不是: git push
+            
+        2)检查生产环境项目,数据入库情况有无异常,并写成检查日志
+    (4)06.14
+        1)优化第一视频网站的代码,添加养生、历史、美食、国内、搞笑频道
+        2）将第一视频项目部署到生产上，并定时每三个小时启动一次
+        3）找到家装学习网站:http://www.xiugei.com/fengge/
+    (5)06.15
+        1)完成学习模块家装学习网站的爬取-只爬取每个频道的首页,并测试数据入库情况正常
+        2)检查昨天部署在生产上的第一视频网站,数据都入库,定时任务正常执行
+        3)查看elasticsearch版本升级文档
+        
+    工作总结:
+        1)解决测试服务器,DNS域名解析失败的错误
+        2)完成学习模块,宠物学习,假装学习模块的抓取
+        3)熟悉git命令,并基本在本地联系克隆合并等命令
+        4)检测生产环境项目执行情况和数据入库与存储redis情况
+        
+15.2018.06.19-2018.06.22
+    (1)06.19
+        1)查看elasticsearch集群文档,查找elasticsearch版本升级与数据迁移的方法
+        2)检查线上项目运行情况,并写排查日志
+    (2)06.20
+        1)升级测试环境服务器172.18.113.108, 172.18.113.111, 172.18.113.73三台服务器上的elasticsearch版本
+        *学要注意的是,在升级到最新版本前需要备份原来版本的数据以及配置文件,
+        删除干净旧版本的安装包,在安装新版本
+        2)升级172.18.113.107, 172.18.113.112, 172.18.113.113三台服务器上的elasticsearch
+    (3)06.21
+        1)测试版本升级后的集群健康值状态与原先数据是否存在,并将操作步骤归结成文档,上传到git
+        2)下午完成学习模块棋牌学习网站的查找和抓取,数据正常入库,并不熟到测试环境
+    (4)06.22
+        1)给棋牌项目添加爬取分页数据代码
+        2)查看推荐系统文档
+        3)完成戏曲项目网站的查找和爬去,并部署本机测试环境爬取
+    
+    工作总结:
+        1)完成elasticsearch版本升级和数据迁移
+        2)完成棋牌项目,戏曲项目大爬取
+16.2018.06.25-2018.06.29
+    (1)06.25
+        主要查看根据用户行为分析搭建推荐系统的文档,查看生产环境项目运行情况,排查爬虫项目异常并重新定时
+    (2)06.26
+        1)申请三台centos服务做elasticsearch存储用
+        2)生产环境ssh拒绝连接,要求再次输入密码:
+        
+            原因:主要是sshd的设置不允许root用户用密码远程登录
+
+                修改 vim /etc/ssh/sshd_config
+                
+                找到# Authentication:
+                LoginGraceTime 120
+                PermitRootLogin without passwd
+                StrictModes yes
+                
+                改成
+                
+                # Authentication:
+                LoginGraceTime 120
+                PermitRootLogin yes
+                StrictModes yes
+                
+                重启虚拟机
+                
+                或者不要以root权限登录，先登录其他用户然后再去切换账户su！
+                
+            还有可能:
+                vim /etc/ssh/sshd_config
+                #Protocol 2,1　                            ← 找到此行将行头“#”删除，再将行末的“,1”删除，只允许SSH2方式的连接
+                　↓
+                Protocol 2　                                ← 修改后变为此状态，仅使用SSH2
+                
+                #ServerKeyBits 768　                  ← 找到这一行，将行首的“#”去掉，并将768改为1024
+                　↓
+                ServerKeyBits 1024　                  ← 修改后变为此状态，将ServerKey强度改为1024比特
+                
+                #PermitRootLogin yes 　              ← 找到这一行，将行首的“#”去掉，并将yes改为no
+                　↓
+                PermitRootLogin no 　                ← 修改后变为此状态，不允许用root进行登录
+                
+                #PasswordAuthentication yes　      ← 找到这一行，将yes改为no
+                　↓
+                PasswordAuthentication no　        ← 修改后变为此状态，不允许密码方式的登录
+                #PermitEmptyPasswords no　  ← 找到此行将行头的“#”删除，不允许空密码登录
+                　↓
+                PermitEmptyPasswords no　    ← 修改后变为此状态，禁止空密码进行登录
+                
+                然后保存并退出
+        3)查看基于用户行为信息的推荐系统文档
+        
+    (3)06.27
+        1)测试服务器172.18.113.108scrapyd启动失败:
+        原因:scrapyd模块变动,不在/home/centos/py35env/bin/scrapyd这了,跑到/usr/bin/目录下,后台启动,service scrapyd start ,命令在python2.7环境下加载,原来指定的文件失效
+        解决方法:卸载scrapyd模块重新安装
+        检测scrapy状态的命令:systemctl status scrapyd.service
+        2)生产环境,搭建elasticsearch-6.3.0版本集群,安装kibana-6.3.0版本
+        遗留问题:
+        elasticsearch,自己写的配置文件elasticsearch.yml不能执行
+    (4)06.28
+        1)解决elasticsearch,自己写的配置文件elasticsearch.yml不能执行问题,原因:配置文件中节点名称少写个字母
+        2)安装elastisearch-head时,npm istall 执行报错
+        npm: relocation error: npm: symbol SSL_set_cert_cb, version libssl.so.10 not defined in file libssl.so.10 with link time reference
+    (5)06.29
+        1)将咨询项目添加elasticsearch存储,并将项目部署在生产环境,elasticsearch内存入数据
+        2)kibana可试图化工具内还不能显示数据
+        2)解决了安装elastisearch-head时,npm istall 执行报错的问题
+        npm: relocation error: npm: symbol SSL_set_cert_cb, version libssl.so.10 not defined in file libssl.so.10 with link time reference
+	
+        解决方法:
+        执行下面代码：
+	
+    	openssl的版本问题吧 
+    	yum update openssl 试试
+    
+    工作总结:
+        1)查看基于用户行为信息的推荐系统文档
+        2)再生产环境上搭建elasticsearch-6.3.0版本集群,安装kibana
+        3)生产环境咨询爬虫项目数据存储到elasticsearch
+17.2018.07.02-2018.07.06
+    (1)07.02
+        1)解决生产环境,elasticsearch集群有一个节点连接不上的问题.重写配置文件, :后要留一个空格
+        2)写学校项目爬虫网站
+        3)上传更新后的elasticsearch集群doc
+    (2)07.03
+        1)生产环境将爬虫任务停止,并取消定时任务
+        2)本地抓取学校项目数据
+        3)学校大全网存在资源过载的问题,请求过快会导致网站服务器禁止访问
+        解决办法:
+        在settings.p配置文件中
+        DOWNLOAD_DELAY = 60
+        将请求下载间隔时间尽可能写大些
+        
+        4)在172.18.113.221数据库设计学校的表tbl_SchoolDetails
+    (3)07.04
+        1)调试学校爬虫项目,将不需要的字段删除,更改抓取规则,并将项目放在测试服务器测试
+        2)分析社会组织公共服务平台的网站,涉及js动态加载,改用post请求
+    (4)07.05
+        抓取社会组织网站数据,解决分页与详情页面j动态加载的问题
+        
+        # -*- coding: utf-8 -*-
+        import scrapy
+        import time,datetime,uuid
+        
+        from ..items import ChinanpoprojectItem
+        
+        class ChinanpoSpider(scrapy.Spider):
+            name = 'chinanpo'
+            # allowed_domains = ['www.chinanpo.gov.cn']
+            # start_urls = ['http://www.chinanpo.gov.cn/search/orgcx.html']
+        
+            getcodeurl = 'http://www.chinanpo.gov.cn/search/orgcx.html'
+        
+            detailurl = 'http://www.chinanpo.gov.cn/search/vieworg.html'
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36',
+            }
+        
+            def start_requests(self):
+                nums = range(118)
+                for num in nums:
+                    yield scrapy.FormRequest(
+                        url=self.getcodeurl,
+                        headers=self.headers,
+                        formdata={
+                            "page_flag": "true",
+                            "pagesize_key": "macList",
+                            "goto_page": "next",
+                            "current_page": str(num),
+                            "total_count": "2359",
+                            "page_size": "20"
+                        },
+                        callback=self.parse_page
+                    )
+        
+            def parse_page(self, response):
+                codes = response.xpath(" //div[@id='mac-data']//tr/td[2]/a/@href").extract()
+                for code in codes:
+                    gid = code.split('(')[1].split(')')[0]
+                    yield scrapy.FormRequest(
+                        url=self.detailurl,
+                        formdata={
+                            "orgId": gid
+                        },
+                        callback=self.parse_info
+                    )
+    工作总结:
+    1)生产环境elasticsearch集群搭建完成,节点配置,并完成数据存储
+    2)调试学校模块项目,数据抓取数量不对
+    3)完成社会组织查询项目的爬取与测试,数据正常入库
+18.2018.07.09-2018.07.13
+    (1)07.09
+        1)抓取网站运用抓包工具charles,页面数据信息浏览工具postman
+        2)社会组织项目完成地方登记分类的抓取,抓取页面信息之前首先确认页面是post请求还是get请求,通过抓包工具来查看链接与post键值对信息,并发送post请求
+            
+            def start_requests(self):
+                nums = range(42126)
+                for num in nums:
+                    yield scrapy.FormRequest(
+                        url=self.getcodeurl,
+                        headers=self.headers,
+                        formdata={
+                            "status": "5",
+                            "tabIndex": "2",
+                            "regNum": "-1",
+                            "page_flag": "true",
+                            "pagesize_key": "usciList",
+                            "goto_page": "next",
+                            "current_page": str(num),
+                            "total_count": "842505",
+                            "page_size": "20"
+                        },
+                        callback=self.parse_page
+                    )
+    (2)07.10
+        1)学校项目修改完成,原项目数据分类总是被覆盖
+        原因:抓取逻辑没有问题,主要是在定义的抓取链接的函数下,最好不要传递数据item,将抓取的信息放在最后详情页面进行抓取,这样数据不容易被覆盖
+        2)查看swagger接口文档,与推荐系统文档
+    (3)07.12
+        修改社会组织项目字段,处理数据库数据,
+    (4)07.13
+        修改学校项目,新增四个字段,学校所在市区分类,所在省份,学校地图坐标链接,正文简介text文本
+    工作总结:
+        1)完善学校项目,社会组织项目数据的抓取,
+        2)在win10系统服务器上安装一些抓包工具
+        3)分析爬取城市百度百科项目
+19.2018.07.16-2018.07.20
+    (1)07.16
+        1)百度百科发送的是get请求,这就要求我们将链接要分析清楚,拼接到什么地方链接就能显示页面,另外还需要注意请求头,最好自己添加完整的请求头,去掉解压的那一项,在分析是否添加cooki
+        下面是一个完整请求函数
+        
+        # -*- coding: utf-8 -*-
+        import scrapy
+        
+        from ..items import BaiduprojectItem
+        from ..td_Province import Provinces
+        
+        
+        class BaiduSpider(scrapy.Spider):
+            name = 'baidu'
+            # allowed_domains = ['www.baidu.com']
+            url = 'https://baike.baidu.com/item/'
+        
+            """添加请求头,发送get请求"""
+            headers = {
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Accept-Language": "zh-CN,zh;q=0.9",
+                "Cache-Control": "max-age=0",
+                "Connection": "keep-alive",
+                "Cookie": "BAIDUID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A:FG=1; BIDUPSID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A; PSTM=1520824816; BDUSS=VRzSE9JcThvNlBwLUJRZkEyRFE2aWxqdX5BNTR4fklMQ09EMUhOT3FFZzdkeHhiQVFBQUFBJCQAAAAAAAAAAAEAAACid4g5wfXWvtPCbG92ZTgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADvq9Fo76vRaM; MCITY=-%3A; H_PS_PSSID=1422_25810_21085_20929; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; PSINO=2; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; pgv_pvi=7893122048; pgv_si=s1084647424; BKWPF=3; Hm_lvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531718942,1531722176,1531726335,1531726830; BK_SEARCHLOG=%7B%22key%22%3A%5B%22%E5%8C%97%E4%BA%AC%22%2C%22%E8%AE%B8%E6%99%B4%E9%BB%84%E6%99%93%E6%98%8E%22%5D%7D; Hm_lpvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531735213",
+                "Host": "baike.baidu.com",
+                "Referer": "https://baike.baidu.com/item/%E6%96%B0%E7%96%86/132263?fromtitle=%E6%96%B0%E7%96%86%E7%BB%B4%E5%90%BE%E5%B0%94%E8%87%AA%E6%B2%BB%E5%8C%BA&fromid=906636",
+                "Upgrade-Insecure-Requests": "1",
+                "User-Agent": "Mozilla/5.0` (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+            }
+        
+            def start_requests(self):
+                pro_names = Provinces().provinces_list['list']
+                for name in pro_names.values():
+                    url_info = self.url + name
+                    self.logger.info('百度百科完整请求链接: {0}'.format(url_info))
+        
+                    yield scrapy.Request(url_info, headers=self.headers, callback=self.parse)
+        
+            def parse(self, response):
+                item = BaiduprojectItem()
+                item['BaiduEncyclopedia'] = response.xpath('//div[@class="content"]/div[@class="main-content"]').extract_first()
+        
+                print(item)
+    (2)07.17
+        1)编写省,市,县,区,镇,街道项目,在数据库表中添加省市等百度百科字段
+        数据库已有数据,只是添加一字段,用update更新语句
+        
+        def process_item(self, item, spider):
+            try:
+                sql = "UPDATE td_Town SET BaiduEncyclopedia='%s' WHERE VillageName='%s'" % (item['BaiduEncyclopedia'], item['VillageName'])
+                self.cursor.execute(sql)
+                self.conn.commit()
+                print('数据更新成功')
+            except Exception as e:
+                print(e)
+                print('执行sql语句失败')
+    
+            return item
+    (3)07.18
+        1)省市百度百科项目数据大部分已经更新入库,还有个别数据不能更新报错
+        1064, 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'说”，铜陵地区汉时归<a target="_blank" href="/item/%E4%B8%B9%E9%98%B3%\' at line 1')
+        数据有问题
+    (4)07.19
+        1)将抓取规则改成正则提取,解决了部分项目更新数据报错问题
+        date = re.findall(r'<div class="main-content">(.*)<dt class="reference-title">参考资料', response.text, re.S)
+        item['BaiduEncyclopedia'] = date[0]
+        2)数据存储不进数据库,检查是数据的问题
+    (5)07.20
+        1)将,省,市,区县,镇的简介爬取了一下,测试数据完整度
+        2)在解决elasticsearch断电恢复后自启的功能
+    工作总结:
+        1)抓取省,市,县,镇,街道等简介的数据
+        2)改善elasticsearch功能,实现开机自启
+20.2018.07.23-2018.07.27
+    (1)07.23
+        1)改善elasticsearch功能,实现开机自启
+        2)解决省市项目部分数据存储不到数据库的问题
+    (2)07.24
+        1)将学校,社会组织项目部署到生产环境
+        2)解决elasticsearch开机自启的问题
+        添加的自启脚本文件,均无问题,主要是elasticsearch.service处于静止disable状态,需要将其变为enable状态
+        命令:systemctl enable elasticsearch
+        
+        elasticsearch开机自启动:
+        1.卸载安装Java时系统自带的jd文件
+        2.在官网下载jdk1.8版本,将其解压在 /usr/local/java 下面
+        注:一般像Python这样大的环境变量模块,安装在了/usr/目录下,一般的小的模块,安装完成后,安装包一般在/usr/local/下
+        3.为了实现java被/usr/share/elasticsearch/bin下找到,可以给java添加一个软连接
+            ln -s /usr/local/java/jdk1.8/bin/java /usr/bin/
+        4.再在/etc/init.d/目录下添加开机自启动的脚本文件elasticsearch
+            特别注意开机自启动是启动的安装目录下的elasticsearch,/usr/share/elasticsearch/bin 
+            ~$ ./elasticsearch -d
+            elasticsearch 不能在root用户下启动,需要为其添加用户elasticsearch
+            切换用户,给elasticsearch赋予最高权限
+        5.elasticsearch.service处于静止disable状态,需要将其变为enable状态
+        6.测试: cd /usr/share/elasticsearch/bin 
+        ~$ ./elasticsearch -d
+        
+        启动
+        7.重启服务器
+        reboot ---服务器重启
+        shutdown  ---服务器关闭
+        
+    (3)07.25
+        1)编写elasticsearch开机自启配置文档
+        2)修改省,市,县,爬虫项目,解决HTML页面数据由于特殊字符不能存储到数据哭的问题
+        报错:
+        1064, 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'说”，铜陵地区汉时归<a target="_blank" href="/item/%E4%B8%B9%E9%98%B3%\' at line 1')
+        原因:html页面中包含一些含有转义字符的特殊字符串,需要将其用数据库的转义函数转义为数据库认可的代码字符串
+        解决方案:
+        def process_item(self, item, spider):
+            try:
+                """
+                存储页面html时,可能含有一些转义字符的特殊字符,需要用到转义函数escape_string(),转义成数据库能存储的字符串
+                """
+                baidu_info = pymysql.escape_string(item['BaiduEncyclopedia'])
+                sql = "UPDATE td_District SET BaiduEncyclopedia='%s' WHERE DistrictName='%s'" % (baidu_info, item['DistrictName'])
+                self.cursor.execute(sql)
+                self.conn.commit()
+                print('数据更新成功')
+            except Exception as e:
+                print(e)
+                print('执行sql语句失败')
+    
+            return item
+    (4)07.26
+        完善由于省市县爬虫项目由于同义词的原因,数据不能存储数据库,给通过ID查询进行匹配插入数据
+    (5)07.27
+        1)完善爬取城镇项目代码,
+        2)查看获取用户行为信息的文档
+    工作总结:
+        1)完成了elasticsearch开机自启功能的配置
+        2)将省,市,县区三个项目数据抓取完成入库
+        3)城镇,街道项目还在解决同义词的问题
+    
+21.2018.07.30-2018.08.03
+    (1)07.30
+        1)查看elasticsearch集群文档,了解数据备份持久化的机制,和存储机制,配置信息
+        2)进一步完善城镇,街道同义词问题
+        
+    (3)08.01
+        1)通过数据库关联表查询直接在数据库找出自己需要的字段,返回爬虫文件,进行调用爬取
+        
+        打开脚本文件sql_search.py
+        
+        # -*- coding: UTF-8 -*-
+
+        import pymysql
+        
+        
+        def search():
+            """链接数据库"""
+            conn = pymysql.connect(host='172.18.113.221', port=3306, user='Dev3', passwd='123456', db='news', charset='utf8')
+            # 创建游标
+            cur = conn.cursor()
+            print('连接数据库成功')
+        
+            # 游标操作数据库
+            cur.execute("SELECT TownName, DistrictID FROM td_Town")
+        
+            # 使用 fetchall() 方法获取所有数据.
+            data = cur.fetchall()
+        
+            # 数据写入文件
+            # with open('/home/user/桌面/sort/StudyProject/BaiduTownProject/town.txt', 'w') as f:
+            list = []
+            for row in data:
+                t = []
+                # print("城镇信息: {0}".format(row[0]), ",", "关联键id: {0}".format(row[1]))
+                TownName = row[0]
+                t.append(TownName)
+                district_id = row[1]
+                t.append(district_id)
+        
+                # 最上级表的关联查询
+                cur.execute("select DistrictName from td_District where DistrictID='%s'" % district_id)
+                # 获取单条数据
+                data1 = cur.fetchone()
+                DistrictName = data1[0]
+        
+                # 区县,街道拼接完整信息
+                key = str(DistrictName) + TownName
+                t.append(key)
+        
+                # 文件写入
+                # f.write(key + '\n')
+                list.append(t)
+                # return TownName, key, district_id
+            return list
+        
+        
+            # 关闭数据库连接
+            conn.close()
+            cur.close()
+        
+        # search()
+        2)继续学习elasticsearch集群配置文档以及elasticsearch存储机制
+    (4)08.02
+        1)社会组织项目改成分布式爬虫
+        需要用到scrapy-redis模块
+        
+        # url指纹过滤器
+        DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+         
+        # 调度器
+        SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+        # 设置爬虫是否可以中断
+        SCHEDULER_PERSIST = True
+         
+        # 设置请求队列类型
+        # SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderPriorityQueue" # 按优先级入队列
+        SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"  # 按照队列模式
+        # SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderStack" # 按照栈进行请求的调度
+        # Configure item pipelines
+        # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
+         
+        ITEM_PIPELINES = {
+            'scrapy_redis.pipelines.RedisPipeline': 999,  # redis管道文件，自动把数据加载到redis,把原有pipline注释
+        }
+        REDIS_HOST = 'redis ip'
+        REDIS_PORT = 6379
+        
+        
+        spider.p
+        安装scrapy-redis
+        导入模块 from scrapy_redis.spiders import RedisCrawlSpider
+        类参数改为RedisCrawlSpider
+        起始url注释
+        添加redis_key = 'key:urls'
+        
+        2)数据从redis批量导入mysql数据库需要执行脚本文件
+        vim db.py
+        
+        # -*- coding: utf-8 -*-
+        import redis
+        import pymysql
+        import json
+        def process_item():
+            red = redis.Redis(host="127.0.0.1", port=6379,db=0)
+            sql = pymysql.connect(host = "172.18.113.88", port = 3306,user = "Dev3", passwd="Dev3", db="LYNews",charset="utf8")
+            offset = 0
+            while True:
+                # 将数据从redis里pop出来
+                source,data = red.blpop(["GuoJi:items"])
+                item = json.loads(data.decode('utf-8'))
+                # print(item)
+                # print(item['NewsBad'])
+                cursor = sql.cursor()
+                sql1 = 'insert into tbl_ceshi1(NewsID, NewsCategory, SourceCategory, NewsType, NewsTitle, NewsRawUrl, SourceName, AuthorName, InsertDate, NewsContent, NewsDate, NewsClickLike, NewsBad, NewsRead, NewsOffline)' \
+                       'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                print(1111111111111)
+                sql2 = 'insert into tbl_ceshi2(FileID, FileType, FileDirectory, FileDirectoryCompress, FileDate, FileLength, FileUserID, Description, NewsID,image_url)' \
+                       'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                print(2222222222222)
+                try:
+                    cursor.execute(sql1, (
+                        item['NewsID'], item["NewsCategory"], item["SourceCategory"], item["NewsType"], item["NewsTitle"],
+                        item["NewsRawUrl"], item["SourceName"], item["AuthorName"], item["InsertDate"], item["NewsContent"],
+                        item["NewsDate"], item["NewsClickLike"], item['NewsBad'], item['NewsRead'], item['NewsOffline']
+        
+                    ))
+                    print(333333333333333)
+                    for dic in item['FileList']:
+                        cursor.execute(sql2, (
+                            dic['FileID'], dic["FileType"], dic["FileDirectory"], dic["FileDirectoryCompress"],
+                            dic["FileDate"],
+                            dic["FileLength"], dic["FileUserID"], dic["Description"], dic["NewsID"], dic["image_url"]
+                        ))
+                        print(5555555)
+                    sql.commit()
+                    cursor.close()
+                    offset += 1
+                    print(offset)
+                    print('成功插入',cursor.rowcount, '条数据')
+                except Exception as e:
+                    sql.rollback()
+                    print(e)
+                    print("执行sql语句失败")
+        if __name__ == '__main__':
+            process_item()
+    (5)08.03
+        1)完成社会组织团体项目数据的分布式爬取，并将数据导入到数据库当中
+        2）学习elasticsearch集群文档，查看elasticsearch分片，节点分配以及数据备份的文档
+        3)
+            解决pip下载安装包慢的问题
+            mkdir ~/.pip
+            vim ~/.pip/pip.conf
+            编辑内容：
+            [global]
+            index-url = http://mirrors.aliyun.com/pypi/simple
+            [install]
+            trusted-host=mirrors.aliyun.com
+    工作总结:
+    1)完成分布式抓取社会组织团体网站,并将数据从redis导入到MySQL数据库中
+    2)查看elasticsearch集群文档,熟悉其工作原理以及数据共享机制
+22.2018.08.06-2018.08.10
+    (1)08.06
+        1)将学校网站项目更改成为分布式爬虫项目
+        2)给学校项目添加代理池,将不在限速爬取网站数据
+        3)将学习模项目整合成一个项目
+    (2)08.07
+        1)整理elasticsearch开机自启动文档
+        2)继续改学校项目网站
+    (3)08.08
+        1)上午将代理池跑在测试服务器上,爬取学校网站
+        2)下午将172.18.113.108,172.18.113.111, 172.18.113.73, 172.18.113.112, 172.18.113.107服务器上elasticsearch配置为开机自启动
+        3)将elasticsearch开机自启配置文件文档发布在gitlab上的doc下的学习文档目录下
+    (4)08.09
+        1)查找学校项目数据入库乱码的问题
+        2)将172.18.113.113服务器上elasticsearch设置开机自启
+    (5)08.10
+        1)解决爬取学校网站数据入库乱码问题
+        原因:原网页编码格式charset='gbk',而数据库的编码格式为utf-8
+        这就需要将xpath抓取数据的页面进行编码
+        
+        def parse_info(self, response):
+            """获取学校的详细信息"""
+            # item = SchoolprojectItem()
+            res = Selector(text=response.body.decode("GBK"))
+            item = response.meta['item']
+            item['SchCity'] = res.xpath("//div[@class='logo-city']//p/text()").extract_first()
+            item['SchCategory'] = res.xpath("//div[@class='crumbs']/a[2]/text()").extract_first()
+            SchName = re.findall(r'<h1 class="nobackground"><p>(.*)</p></h1>', response.body.decode("GBK"), re.S)
+        2)修改village百度百科项目
+    工作总结:
+        1)学校项目解决数据入库乱码问题
+        2)完成elasticsearch开机自启动配置,并形成文档上传git服务器
+        3)百度百科项目大体抓取完成
+23.2018.08.13-2018.08.17
+    (1)08.13
+        1)重新将学校项目在测试服务器跑起来,测试数据是否抓去完成
+        2)查看推荐系统用户行为信息收集有关的文档,确定收集用户的具体信息,以及获取数据的方式,用户基本信息从数据库中获取,用户访问咨询新闻的浏览数据通过后端接口,从前端页面的浏览日志中返回
+        首先确定需要几个接口分别的作用
+        3)将整理的学习项目在本机测试服务器上测试
+    (2)08.14
+        1)给学习模块项目添加开关变量,文章图片不在下载到本地,直接入库
+        在配置文件中添加一个开关变量即可
+        settings.py
+        OPEN = 1
+        2)测试学习模,报出DNS错误
+        
+        twisted.internet.error.DNSLookupError: DNS lookup failed: no results for hostname lookup: www.xiugei.com
+    (3)08.15
+        1)本机测试学习模块爬取项目运行状况,
+        2)登录github查询推荐系统,查看相关实例
+        用户维度数据:
+        用户维度数据，是用来描述用户的特征数据。 了解用户，一般从用户标签属性和用户行为属性两个层面入手。
+
+        用户标签属性是用来描述用户的静态特征属性，如用户的性别，年龄，喜好，出行偏好，住址等。
+        用户行为数据，简单来说就是用户的行为日志，用户在互联网上的任何行为，都会产生日志， 比如用户浏览了哪个网站，用户搜索了哪个名词，用户点击了哪个广告，用户播放了哪个视频等等，都属于用户行为数据。 用户行为常被分为两类，显性反馈行为和隐性反馈行为。显性反馈行为是指用户明确表示物品喜好的行为， 如常见的评分，点赞等。 隐性反馈行为是指那些不能明确反映用户喜好的行为。常见的有页面浏览的行为。 用户浏览一个页面，不代表用户一定喜欢这个页面展现的物品，很有可能只是因为这个页面在首页，用户更容易点击而已。
+        
+        信息维度数据:
+        信息维度数据，用于描述信息的特征属性。 不同种类的消息内容，用不同的特征指标来标识。
+        
+        时间维度数据:
+        时间维度数据，就是与时间相关的用户特征和信息特征。 如用户当前在中关村， 中关村某店未来三小时有抢购活动等。 在使用这些特征的时候，一定要注意其时效性。
+    (4)08.16
+        1)确定用户行为数据:点赞,评论,页面停留时间,页面访问次数,访问时间,数字ID/用户账号,来源IP,访问页面,来源页面
+        2)前端与后端交互的jso数据格式,数组+对象的形式
+        [('a':"A",'b': "B",'c':"C"),('a':"A",'b': "B",'c':"C"),('a':"A",'b': "B",'c':"C"),('a':"A",'b': "B",'c':"C")]
+        3)将学习模块项目部署到生产环境服务器上面,数据存储redis和mysql数据库
+        4)查看接口文档
+    (5)08.17
+        1)继续查看关于pytho的接口文档,
+        2)Python接口可以通过django,flask来实现,都要通过restful api
+    工作总结:
+        1)修改学习模块代码,添加开关变量,将页面中的图片不保存到本地
+        2)将学习模块部分打的学习类别网站项目部署到生产环境上
+        3)查看用户行为信息方面的文档
+24.2018.08.20-2018.08.24
+    (1)08.20
+        1)学习restful api,查看接口实例代码
+        2)将学校模块数据库数据修改好
+    (2)08.21
+        1)继续学习restful api接口文档知识,分析访问日志收集的流程
+        2)将剩余学习模块的项目部署到生产环境,做定时,每天爬取三个小时
+    (3)08.22
+        1)用restful api框架简单写了一个后端接口,测试效果成功
+        2)遇到问题:
+            接口指定ip及端口只能在本机访问,其他主机不能访问
+            原因:ubuntu本机端口没有对外开放
+            ubuntu下开放端口主要有两种办法:
+            1.自带的防火墙
+            2.使用iptables
+            1)安装iptables:
+                sudo apt-get install iptables
+            2)添加规则：
+                $ sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+                对外开放80端口
+            3)保存规则
+                sudo iptables-save
+            4)持久化iptables
+            iptables-save只是暂时保存了端口的开放规则，如果关机或者重启，那么刚才添加的规则就会失效。 
+            使用iptables-persistent可以对端口的开放规则进行持久化操作，使其永久保持有效。
+            5)安装iptables-persistent
+                sudo apt-get install iptables-persistent
+            6)持久化规则
+                sudo netfilter-persistent save
+                sudo netfilter-persistent reload
+    (4)08.23
+        1)用django编写了一个restful api 接口,启动测试接口命令:
+          python manage.py rusnerver 172.18.104.228:8000
+        2)api接口实现了表单与用户之间拥有对应的关系,实现途径是添加yiower字段将用户与文档关联在一起
+    (5)08.24
+        1)学习swagger api文档,
+        2)安装在线编辑swagger的工具,swagger editor
+            1.下载并且安装node.js 
+            也可以使用ubuntu自带apt-get安装,安装后使用node -v查看版本
+            sudo apt-get install nodejs-legacy nodejs
+            sudo apt-get install npm
+            安装方法参考链接:https://blog.csdn.net/w20101310/article/details/73135388
+            2. npm install -g http-server 
+            3.下载项目wget https://github.com/swagger-api/swagger-editor/archive/v3.0.17.tar.gz 并且解压。
+            4.进入swagger-editor文件夹。运行http-server命令。
+            npm install -g http-server
+            报错: Please try running this command again as root/Administrator
+            执行:sudo chown -R user:user /usr/local/lib/node_modules
+            5.启动Swagger-Editor项目
+            http-server swagger-editor 以8080端口启动项目 
+            http-server –p 8082 swagger-editor 指定端口启动项目
+            http-server -p 8081 swagger-editor-3.0.17。
+        3)Node.js +Swagger Editor + Swagger-UI 环境搭建
+        参考链接:
+        https://blog.csdn.net/ruglcc/article/details/76166200
+    工作总结:
+        1)查看restful api接口文档,简单编写了一个api
+        2)将学习模块项目全部部署到生产环境,,每天定时爬取三个小时
+        3)查看swagger ap接口文档
+25.2018.08.27-2018.08.31
+    (1)08.27
+        1)简单将swagger edi 与 swagger ui安装成功
+        2)继续查看swagge api接口文档
+    (2)08.28
+        1)安装tomcat服务器
+        2)数据库数据导出并导入另一表中
+    (3)08.29
+        1)修改学习板块项目,将部分项目LRCategory与LRSourceCategory两字段赋值互换,
+        2)在swagger editor上面编辑API接口文档,生成json文件传到/home/user/swagger/node_app/public目录下面,启动swagger ui就能展示自己编写的接口文档
+    (4)08.30
+        1)检查生产环境学习模块项目数据爬取情况,数据正常入库
+        2)将swagger.json文档传到sosoapi上面做项目管理
+    (5)08.31
+        1)下载sosoapi-web项目源代码,安装idea的java开发工具,测设将sosoapi接口文档管理平台在本地运行
+        
+    工作总结:
+        1)完成swagger接口工具的安装与简单使用
+        2)简单完成swagger API接口文档的编写
+        3)修改学习模块的项目,将学习模块的数据重新导入另外一张表
+        4)在本地尝试搭建swagger接口文档管理服务平台
+        
+26.2018.09.03-2018.09.07
+    (1)09.03
+        1)检查生产环境学习项目运行情况,解决部分项目正文内容为空的问题,xpath抓取规则到p标签,而非 p/text()
+        2)用Python编写文件下载本地脚本,和获取接口post请求脚本
+        3)继续搭建swagge接口项目到本地服务器
+    (2)09.04
+        1)查看sosoapi接口文档管理平台的本地搭建文档
+        2)将swagger api接口文档部署到本地tomcat服务器上,运行成功,接口在浏览器上访问到
+            1.从sosoapi上下载SwaggerUI扩展版,将解压后的swagger放到tomcat下的webapps下面
+            2.启动tomcat 
+            cd /opt/tomcat/apache-tomcat-8.5.33/bin
+            ./startup.sh
+            3.浏览器访问:http://172.18.104.228:8080/swagger/
+        3)接口上传文件时,出现ajax跨域请求的问题
+    (3)09.05
+        1)swagger api 在触发上传文件时,没有响应头,和响应页面    
+        2)浏览swagger在本地服务器部署
+    (4)09.06
+        用django rest swagger编写api
+    (5)09.07
+        用django编写后端上传文接口
+    工作总结:
+        编写和测试后端接口
+27.2018.09.10-2018.09.14
+    (1)09.10
+        1)用djang框架编写后端接口页面,通过form表单上传文件到本地
+    (2)09.11
+        实现文件的上传与下载,通过解压缩,将json文件内的数据读取出来存储到数据库
+    (3)9.12
+        重新修改接口,用flas编写接口脚本,封装post请求,测试接口
+    (4)09.13
+        1)测试上传文件接口,发送携带上传文件信息的files参数的post请求,将文件上传到接口指定路径下,前端一提交文件,就触发后端文件下载与处理操作,将json格式的数据入库
+        
+        测试接口的post请求脚本
+        
+        # encoding: utf-8
+
+        import requests
+        import os
+        
+        
+        #上传文件到服务器
+        def web_requests():
+            url = 'http://172.18.113.108:8001/upload'
+            file = {
+                'file': open(os.getcwd()+'/Base_files/logs.json.zip','rb'),
+                    }
+            r = requests.post(url=url, files=file)
+            print(r.text, r.status_code)
+        
+            return r.text
+        
+        
+        if __name__ == '__main__':
+            web_requests()
+        2)在postman上设置form-data键值为后端脚本设置的名称,,类型选为'file',value值为上传一方所选的zip压缩文件
+        3)编写前端已上传就触发日志的脚本
+    (5)09.14
+        1)将接口测试成功,并编写前端上传文件时的记录日志脚本
+        2)修改爬虫项目,百度百科项目,增添手机版页面效果内容
+    工作总结:
+        1)完成上传文件接口的编写与测试,以及日志文件的编写
+        2)修改百度百科爬虫项目
+28.2018.09.17-2018.09.21
+    (1)09.17
+        1)修改百度百科爬虫项目,爬取手机端页面展示内容
+        2)页面为js加载,使用scrapy + selenium无界面浏览器加载页面完成以后在爬取页面内容
+    (2)09.18
+        1)页面为js加载,使用scrapy + selenium无界面浏览器加载页面完成以后在爬取页面内容
+        爬虫文件:
+        
+        import scrapy
+        import re
+        from selenium import webdriver
+        from scrapy.xlib.pydispatch import dispatcher
+        from scrapy import signals
+        from ..items import BaiduprojectItem
+        from ..td_Province import Provinces
+        
+        
+        class MobileSpider(scrapy.Spider):
+            name = 'mobile'
+            # allowed_domains = ['baidu.com']
+            # start_urls = ['https://wapbaike.baidu.com/item/%E6%B2%B3%E5%8D%97/132980']
+            url = 'https://wapbaike.baidu.com/item/'
+        
+            """添加请求头,发送get请求"""
+            headers = {
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Accept-Language": "zh-CN,zh;q=0.9",
+                "Cache-Control": "max-age=0",
+                "Connection": "keep-alive",
+                "Cookie": "BAIDUID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A:FG=1; BIDUPSID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A; PSTM=1520824816; BDUSS=VRzSE9JcThvNlBwLUJRZkEyRFE2aWxqdX5BNTR4fklMQ09EMUhOT3FFZzdkeHhiQVFBQUFBJCQAAAAAAAAAAAEAAACid4g5wfXWvtPCbG92ZTgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADvq9Fo76vRaM; MCITY=-%3A; H_PS_PSSID=1422_25810_21085_20929; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; PSINO=2; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; pgv_pvi=7893122048; pgv_si=s1084647424; BKWPF=3; Hm_lvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531718942,1531722176,1531726335,1531726830; BK_SEARCHLOG=%7B%22key%22%3A%5B%22%E5%8C%97%E4%BA%AC%22%2C%22%E8%AE%B8%E6%99%B4%E9%BB%84%E6%99%93%E6%98%8E%22%5D%7D; Hm_lpvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531735213",
+                "Host": "baike.baidu.com",
+                "Referer": "https://baike.baidu.com/item/%E6%96%B0%E7%96%86/132263?fromtitle=%E6%96%B0%E7%96%86%E7%BB%B4%E5%90%BE%E5%B0%94%E8%87%AA%E6%B2%BB%E5%8C%BA&fromid=906636",
+                "Upgrade-Insecure-Requests": "1",
+                # "User-Agent": "Mozilla/5.0` (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (Linux;U;Android 2.3;en-us;Nexus One Build/FRF91)AppleWebKit/999+(KHTML, like Gecko)Version/4.0 Mobile Safari/999.9",
+            }
+        
+            def __init__(self):
+                """
+                无界面浏览器
+                """
+                from pyvirtualdisplay import Display
+                display = Display(visible=0, size=(800, 600))
+                display.start()
+        
+                self.browser = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
+                self.browser.set_page_load_timeout(50)
+        
+                super(MobileSpider, self).__init__()    # 设置可以获取上一级父类基类的，__init__方法里的对象封装值
+                dispatcher.connect(self.spider_closed, signals.spider_closed)     # dispatcher.connect()信号分发器，第一个参数信号触发函数，第二个参数是触发信号，signals.spider_closed是爬虫结束信号
+        
+            def spider_closed(self, spider):
+                print("spider closed")
+                self.browser.close()
+        
+            def start_requests(self):
+                pro_names = Provinces().provinces_list['list']
+                for name in pro_names.values():
+                    item = BaiduprojectItem()
+                    item['ProvinceName'] = name
+                    url_info = self.url + name
+                    self.logger.info('百度百科完整请求链接: {0}'.format(url_info))
+        
+                    yield scrapy.Request(url_info, headers=self.headers, callback=self.parse, meta={'item': item})
+        
+            def parse(self, response):
+                item = response.meta['item']
+                # date = re.findall(r'<dd class="lemmaWgt-lemmaTitle-title">(.*)<div class="album-list">', response.text, re.S)
+                # info = date[0].replace(r'<em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>', '')
+                # item['BaiduEncyclopedia'] = info.strip()
+                # date = re.findall(r'<div class="title-part">(.*)<h4 class="title">参考资料</h4>', response.text, re.S)
+                # info = date[0].replace(r'<em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>', '')
+                # date = response.xpath('//div[@class="BK-content-wrapper"]').extract_first()
+                # item['MobilePhone'] = response.body.decode('utf-8')
+                item['MobilePhone'] = ''.join(response.xpath('//ul[starts-with(@class,"sound-list")]').extract())
+                self.logger.info('文本内容:{}'.format(item['MobilePhone']))
+        
+                yield item
+                
+        中间件:
+        from scrapy import signals
+        from scrapy.http import HtmlResponse
+        from selenium.common.exceptions import TimeoutException
+        import time
+        
+        
+        class SeleniumMiddleware(object):
+            def process_request(self, request, spider):
+                if spider.name == 'mobile':
+                    try:
+                        spider.browser.get(request.url)
+                        spider.browser.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+                    except TimeoutException as e:
+                        print('超时')
+                        spider.browser.execute_script('window.stop()')
+                    time.sleep(2)
+                    return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source, encoding="utf-8", request=request)
+        
+        settings.py文件:
+        
+        DOWNLOADER_MIDDLEWARES = {
+           'BaiDuProject.middlewares.SeleniumMiddleware': 543,
+        }
+        
+        2)修改文件上传接口
+    (3)09.19
+        1)给接口添日志文件接口
+        在你的项目下建立一Common文件夹,然后创建一confi.xml文件
+        <?xml version="1.0" encoding="utf-8"?>
+
+        <config>
+            <!--  日志保存路径  -->
+            <logpath>/home/user/桌面/sort/Functions/Upload/LOG</logpath>
+        
+            <!-- 每个脚本对应的日志文件大小，单位MB -->
+            <logsize>10</logsize>
+        
+            <!-- 每个脚本保存的日志文件个数 -->
+            <lognum>3</lognum>
+        </config>
+        
+        创建日志脚本,log.py
+        # coding: utf-8
+
+        from lxml import etree
+        import logging.handlers
+        import logging
+        import os
+        import sys
+        
+        
+        # 提供日志功能
+        class logger:
+            # 先读取XML文件中的配置数据
+            # 由于config.xml放置在与当前文件相同的目录下，因此通过 __file__ 来获取XML文件的目录，然后再拼接成绝对路径
+            # 这里利用了lxml库来解析XML
+            root = etree.parse(os.path.join(os.path.dirname(__file__), 'config.xml')).getroot()
+            # 读取日志文件保存路径
+            logpath = root.find('logpath').text
+            # 读取日志文件容量，转换为字节
+            logsize = 1024*1024*int(root.find('logsize').text)
+            # 读取日志文件保存个数
+            lognum = int(root.find('lognum').text)
+        
+            # 日志文件名：由用例脚本的名称，结合日志保存路径，得到日志文件的绝对路径
+            logname = os.path.join(logpath, sys.argv[0].split('/')[-1].split('.')[0])
+        
+            # 初始化logger
+            log = logging.getLogger()
+            # 日志格式，可以根据需要设置
+            fmt = logging.Formatter('[%(asctime)s][%(filename)s][line:%(lineno)d][%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S')
+        
+            # 日志输出到文件，这里用到了上面获取的日志名称，大小，保存个数
+            handle1 = logging.handlers.RotatingFileHandler(logname, maxBytes=logsize, backupCount=lognum)
+            handle1.setFormatter(fmt)
+            # 同时输出到屏幕，便于实施观察
+            handle2 = logging.StreamHandler(stream=sys.stdout)
+            handle2.setFormatter(fmt)
+            log.addHandler(handle1)
+            log.addHandler(handle2)
+        
+            # 设置日志级别，这里设置为INFO，表示只有INFO级别及以上的会打印
+            log.setLevel(logging.INFO)
+        
+            # 日志接口，用户只需调用这里的接口即可，这里只定位了INFO, WARNING, ERROR三个级别的日志，可根据需要定义更多接口
+            @classmethod
+            def info(cls, msg):
+                cls.log.info(msg)
+                return
+        
+            @classmethod
+            def warning(cls, msg):
+                cls.log.warning(msg)
+                return
+        
+            @classmethod
+            def error(cls, msg):
+                cls.log.error(msg)
+                return
+        最后就是调用日志接口,哪里需要打印日志就在哪里调用接口函数
+        2)与前端交互,测试上传文件数据是否成功,数据能否正常入库
+    (4)09.20
+        1)修改接口,允许上传zip压缩文件,json,txt文件,解决文件解析完成无法删除的问题
+        删除文件:
+        import os
+        from Common.log import *
+        
+        
+        def listdir(path, list_name):
+            list_name = []
+            for file in os.listdir(path):
+                file_path = os.path.join(path, file)
+                if os.path.isdir(file_path):
+                    listdir(file_path, list_name)
+                elif os.path.splitext(file_path)[1] == '.zip':
+                    list_name.append(file_path)
+                elif os.path.splitext(file_path)[1] == '.json':
+                    list_name.append(file_path)
+                elif os.path.splitext(file_path)[1] == '.txt':
+                    list_name.append(file_path)
+        
+            return list_name
+        
+        
+        def del_zip():
+            """
+            删除压缩文件
+            :return:
+            """
+            try:
+                path = os.getcwd() + '/Files'
+                list_name = []
+                list_name = listdir(path, list_name)
+                for filename in list_name:
+                    if os.path.exists(filename):
+                        os.remove(filename)
+                        logger.info('成功删除解压缩文件:%s' % filename)
+                        print('成功删除压缩文件:%s' % filename)
+                    else:
+                        logger.info('目标文件夹为空,文件不存在!')
+                        print('文件不存在')
+            except Exception as e:
+                logger.info(e)
+        2)添加elasticsearch,将解析出来的数据保存到elasticsearch,并统计上传数据的时间
+        from elasticsearch import Elasticsearch
+        from elasticsearch import helpers
+    
+        start_time = time.time()    # 开始时间
+        es = Elasticsearch(['172.18.113.112:9200'])
+        try:
+            i = 0
+            actions = []
+            for dict0 in Dict:
+                action = {
+                    "_index": "im_usermsg",
+                    "_type": "tbl_NewsUserInfo",
+                    "_id": i,
+                    "_source": {
+                        "DataID": dict0['DataID'],
+                        "UserID": dict0['UserID'],
+                        "NewsID": dict0['NewsID'],
+                        "Accesslike": dict0['Accesslike'],
+                        "AccessTime": dict0['AccessTime'],
+                        "AccessNum": dict0['AccessNum'],
+                        "ResidenceTime": dict0['ResidenceTime'],
+                        "CommentsNum": dict0['CommentsNum'],
+                        "AccessWay": dict0['AccessWay'],
+                    }
+                }
+                i += 1
+                actions.append(action)
+                if len(action) == 1000:
+                    helpers.bulk(es, actions)
+                    del actions[0:len(action)]
+            if i > 0:
+                helpers.bulk(es, actions)
+    
+            end_time = time.time()  # 结束时间
+            t = end_time - start_time
+    
+            logger.info('json数据存储es成功! 本次共写入{}条数据,用时{}s'.format(i, t))
+            print('本次共写入{}条数据,用时{}s'.format(i, t))
+            print('json数据存储es成功!')
+        except Exception as e:
+            logger.error(e)
+            print('json数据存储es失败!')
+    (5)09.21
+        1)测试接口高并发情况
+        2)部署nginx,
+    工作总结:
+        1)修改百度百科爬虫项目,爬取手机端页面展示内容,还未完成
+        2)完善文件上传接口,与前端交互测试,文件上传,下载,解析,删除,接口高并发
+        3)部署nginx
+        
+29.2018.09.25-2018.09.30
+    (1)09.25
+        1)更新ubuntu系统
+        2)api项目部署nginx
+    (2)09.26
+        1)测试项目部署nginx服务器成功
+        需要注意:
+        建立的虚拟环境要与,ini文件中的home路径保持一致,nginx启动与uwsgi需要建立通信,项目才能真正在nginx服务器上部署成功
+        20部署步骤参考链接:
+        https://www.oschina.net/translate/serving-flask-with-nginx-on-ubuntu
+    (3)09.27-09.30
+        1)将upload_api接口部署到本地nginx服务器上,测试接口调用成功,文件解析数据情况正常
+        部署nginx服务器:
+        首先要安装nginx,准备工作:升级已有的包，确保系统上有uWSGI所需的编译器和工具：
+        sudo apt-get update && sudo apt-get upgrade
+        sudo apt-get install build-essential python python-dev
+        然后,安装并运行Nginx:
+        sudo apt-get install nginx
+        sudo /etc/init.d/nginx start
+        修改一下nginx配置文件,将自己的项目部署在nginx上面
+        cd /etc/nginx/conf.d
+        vim upload.conf
+        
+        server {
+        listen       80;
+        server_name  172.18.104.228;
+        charset utf-8; # Nginx编码
+        gzip_types text/plain application/x-javascript text/css text/javascript application/x-httpd-php application/json text/json image/jpeg image/gif image/png application/octet-stream; # 支持压缩的类型
+
+        error_page 404 /404.html; # 错误页面
+        error_page 500 502 503 504 /50x.html; # 错误页面
+        location / {
+            include /etc/nginx/uwsgi_params;
+            uwsgi_connect_timeout 30; # 设置连接uWSGI超时时间
+            uwsgi_pass unix:/home/user/Documents/Upload/uwsgi.sock;
+       }
+        }
+        
+        下一步安装uwsgi
+        sudo pip install uwsgi
+        在项目的venv虚拟环境的目录下建立uwsgi.ini文件
+        
+        #myweb_uwsgi.ini file
+        [uwsgi]
+        http = 172.18.104.228:5000
+        #application's base folder 
+        base = /home/user/Documents/Upload
+        
+        #python module to import 
+        module = upload_api
+        
+        home = %(base)/venv
+        pythonpath = %(home)
+        
+        #socket file's location 
+        socket = /home/user/Documents/Upload/uwsgi.sock
+        
+        #permissions for the socket file 
+        chmod-socket = 644
+        
+        #the variable that holds a flask application inside the module imported at line #6 
+        callable = application
+        
+        # maximum number of worker processes
+        processes = 4
+        
+        # clear environment on exit
+        vacuum = true
+        
+        #location of log files 
+        logto = /var/log/uwsgi/%n.log
+        
+        运行uwsgi.ini文件产生与nginx通信的文件uwsgi.sock
+        uwsgi --ini uwsgi.ini &
+        
+        2)将Upload接口项目部署在172.18.113.108测试服务器上面的nginx上,注意nginx是用源码安装的安装包在 /usr/local 下面,安装路径与安装包在同一路径
+            启动nginx: 
+            cd /usr/local/nginx/sbin
+            ./nginx
+            监听端口号为8001, uwsgi.ini文件设置ip端口号为172.18.113.108:5000
+        3)用pytho编写脚本,通过用户浏览信息中新闻页面的停留时间对新闻进行排序,取出用户最喜欢的新闻id,去新闻数据库tbl_NewsDetails获取新闻的大标签,并根据标签对
+        用户访问同类标签新闻做权重处理,最后将用户id,新闻标签,新闻权重存储表tbl_NewsTags
+    工作总结:
+    1)完成接口项目在测试服务器部署nginx服务器
+    2)完成用户浏览新闻信息权重的处理及入库 
+30.2018.10.08-2018.10.12
+    (1)10.08
+        1)整理以往项目代码
+        2）修改百度百科爬虫项目代码，更换无界面浏览器加载页面抓取数据方式，改用for循环拼接页面内容进行抓取手机端页面内容
+        
+        # -*- coding: utf-8 -*-
+        import scrapy
+        import requests
+        from ..items import BaiducityprojectItem
+        from ..baidu_city import BaiduCity
+        from w3lib.html import remove_tags
+        
+        
+        class MobilePhoneSpider(scrapy.Spider):
+            name = 'mobile_phone'
+            # allowed_domains = ['wapbaike.baidu.com']
+            # start_urls = ['http://wapbaike.baidu.com/']
+        
+            url = 'https://wapbaike.baidu.com/item/'
+            headers = {
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Accept-Language": "zh-CN,zh;q=0.9",
+                "Cache-Control": "max-age=0",
+                "Connection": "keep-alive",
+                "Cookie": "BAIDUID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A:FG=1; BIDUPSID=8FFA7CAEF97EAA6480FAC46A4C4E3F1A; PSTM=1520824816; BDUSS=VRzSE9JcThvNlBwLUJRZkEyRFE2aWxqdX5BNTR4fklMQ09EMUhOT3FFZzdkeHhiQVFBQUFBJCQAAAAAAAAAAAEAAACid4g5wfXWvtPCbG92ZTgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADvq9Fo76vRaM; MCITY=-%3A; H_PS_PSSID=1422_25810_21085_20929; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; PSINO=2; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; pgv_pvi=7893122048; pgv_si=s1084647424; BKWPF=3; Hm_lvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531718942,1531722176,1531726335,1531726830; BK_SEARCHLOG=%7B%22key%22%3A%5B%22%E5%8C%97%E4%BA%AC%22%2C%22%E8%AE%B8%E6%99%B4%E9%BB%84%E6%99%93%E6%98%8E%22%5D%7D; Hm_lpvt_55b574651fcae74b0a9f1cf9c8d7c93a=1531735213",
+                "Host": "wapbaike.baidu.com",
+                "Referer": "https://wapbaike.baidu.com/item/%E6%96%B0%E7%96%86/132263?fromtitle=%E6%96%B0%E7%96%86%E7%BB%B4%E5%90%BE%E5%B0%94%E8%87%AA%E6%B2%BB%E5%8C%BA&fromid=906636",
+                "Upgrade-Insecure-Requests": "1",
+                # "User-Agent": "Mozilla/5.0` (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (Linux;U;Android 2.3;en-us;Nexus One Build/FRF91)AppleWebKit/999+(KHTML, like Gecko)Version/4.0 Mobile Safari/999.9",
+            }
+        
+            def start_requests(self):
+                pro_names = BaiduCity().baidu_citys['list']
+                for name in pro_names.values():
+                    item = BaiducityprojectItem()
+                    item['CityName'] = name
+                    url_info = self.url + name
+        
+                    yield scrapy.Request(url_info, headers=self.headers, callback=self.parse, meta={'item': item})
+        
+            @staticmethod
+            def common(base):
+                '''
+                获取页面数据
+                :param base:
+                :return:
+                '''
+                base_url = '{}?wpf=3&ldr=1&page={}&insf=1'
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Linux;U;Android 2.3;en-us;Nexus One Build/FRF91)AppleWebKit/999+(KHTML, like Gecko)Version/4.0 Mobile Safari/999.9",
+                }
+        
+                # 拼接手机百度百科页面
+                html = ''
+                for i in range(0, 25):
+                    res = requests.get(base_url.format(base, i), headers=headers).content.decode()
+        
+                    html += res
+                    if remove_tags(res) is None:  # remove_tags去除标签后内容如果为空
+                        break
+        
+                return html
+        
+            def parse(self, response):
+                item = response.meta['item']
+                head = response.xpath('//div[@class="BK-before-content-wrapper"]/div[@class="card-part"]').extract_first()
+                data = response.xpath('//div[@class="BK-before-content-wrapper"]/div[@class="basicInfo"]').extract_first()
+                url_first = response.url
+                baseurl = url_first.split('?')[0]
+                html = self.common(baseurl)
+                item['MobilePhone'] = head + data + html
+        
+                yield item
+    (2)10.09
+        1)

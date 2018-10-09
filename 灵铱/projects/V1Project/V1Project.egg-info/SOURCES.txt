@@ -1,0 +1,14 @@
+setup.py
+V1Project/__init__.py
+V1Project/file_model.py
+V1Project/items.py
+V1Project/middlewares.py
+V1Project/pipelines.py
+V1Project/settings.py
+V1Project.egg-info/PKG-INFO
+V1Project.egg-info/SOURCES.txt
+V1Project.egg-info/dependency_links.txt
+V1Project.egg-info/entry_points.txt
+V1Project.egg-info/top_level.txt
+V1Project/spiders/V1.py
+V1Project/spiders/__init__.py

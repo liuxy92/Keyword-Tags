@@ -1,0 +1,43 @@
+1.安装过滤器模块
+pip install scrapy-redis-bloomfilter
+
+2.setting中配置如下
+
+# Ensure use this Scheduler 调用模块
+SCHEDULER = "scrapy_redis_bloomfilter.scheduler.Scheduler"
+
+# Ensure all spiders share same duplicates filter through redis 确保通过redis过滤
+DUPEFILTER_CLASS = "scrapy_redis_bloomfilter.dupefilter.RFPDupeFilter"
+
+# Redis URL 
+REDIS_URL = 'redis://:foobared@localhost:6379'
+
+# Number of Hash Functions to use, defaults to 6 使用哈希函数的数量，默认6
+BLOOMFILTER_HASH_NUMBER = 6
+
+# Redis Memory Bit of Bloomfilter Usage, 30 means 2^30 = 128MB, defaults to 30 过滤器redis内存使用率 30表示2 ^ 30 = 128MB，默认为30 
+BLOOMFILTER_BIT = 30
+
+# Persist
+SCHEDULER_PERSIST = True
+
+
+运行测试 项目结束后看到结果
+
+{ '布隆过滤器/过滤'：10，＃这是布隆过滤器过滤请求的数目
+ '下载/ request_bytes '：34021，
+  '下载/ REQUEST_COUNT '：100，
+  '下载/ request_method_count / GET '：100，
+  '下载/ response_bytes '：72943，
+  ' downloader / response_count '：100，
+  ' downloader / response_status_count / 200 '：100，
+  ' finish_reason '：'结束'，
+  ' finish_time '：datetime.datetime（2017，8，11，9，34，30，419597），
+  ' log_count / DEBUG '：202，
+  ' log_count / INFO '：7，
+  ' memusage / max '：54153216，
+  ' memusage / startup '：54153216，
+  ' response_received_count '：100，
+  '调度器/出列/ redis的'：100，
+  '调度器/入队/ redis的'：100，
+  ' START_TIME '：datetime.datetime（2017，8，11，9，34，26，495018）}

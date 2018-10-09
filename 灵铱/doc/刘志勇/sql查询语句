@@ -1,0 +1,42 @@
+SELECT * FROM tbl_NewsDetails WHERE SourceCategory LIKE '环球旅游滚动新闻'
+
+SELECT * FROM tbl_NewsDetails WHERE NewsCategory='001.010'
+
+# 查询条件是同一列时,用OR
+SELECT * FROM tbl_NewsDetails WHERE NewsCategory='001.010' OR NewsCategory='001.008'
+
+# 查询条件是不同列时,用AND
+SELECT * FROM tbl_NewsDetails WHERE NewsCategory='001.010' AND SourceCategory='光明视频' 
+
+#AND和OR混合使用时,(使用圆括号来组成复杂的表达式)
+SELECT * FROM tbl_NewsDetails WHERE (NewsCategory='001.010' OR NewsCategory='001.008') AND  SourceCategory='光明视频'
+
+# 查询的列的元素类型为int时,不加单引号,
+SELECT * FROM tbl_NewsDetails WHERE NewsRead>=0
+
+# ORDER BY 语句用于对结果集进行排序(默认为升序)
+SELECT * FROM tbl_NewsDetails ORDER BY InsertDate
+# 降序
+SELECT * FROM tbl_NewsDetails ORDER BY InsertDate DESC
+
+# 限制显示数据的条数
+SELECT * FROM tbl_NewsDetails LIMIT 100
+
+# LIKE 操作符用于在 WHERE 子句中搜索列中的指定模式
+SELECT * FROM tbl_NewsDetails WHERE NewsCategory LIKE '001.%'
+SELECT * FROM tbl_NewsDetails WHERE NewsCategory LIKE '%008'
+SELECT * FROM tbl_NewsDetails WHERE SourceCategory LIKE '%娱乐%'
+
+# IN 操作符允许我们在 WHERE 子句中规定多个值
+SELECT * FROM tbl_NewsDetails WHERE SourceName IN ('汽车之家', '环球网')
+
+# BETWEEN 操作符在 WHERE 子句中使用，作用是选取介于两个值之间的数据范围
+SELECT * FROM tbl_NewsDetails WHERE InsertDate BETWEEN '2018-04-08 18:31:36' AND '2018-04-08 19:20:47'
+
+SELECT * FROM tbl_NewsDetails WHERE InsertDate NOT BETWEEN '2018-04-08 18:31:36' AND '2018-04-08 19:20:47'
+
+# 更新某条数据
+ UPDATE HR.tbl_MyProjects SET State=0 WHERE UserID='admin'
+ 
+# 设置唯一索引
+ALTER TABLE HR.tbl_MyProjects ADD UNIQUE KEY('Title')

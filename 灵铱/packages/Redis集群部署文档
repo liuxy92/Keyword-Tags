@@ -1,0 +1,128 @@
+安装redis需针对安装，redis第一个小数点后数字为偶数为稳定版本（3.0,2.8），奇数为非稳定版，生产环境一般使用稳定版本
+1.下载安装包（三台需全部操作）
+下载地址：http://www.redis.cn/ wget http://download.redis.io/releases/redis-4.0.2.tar.gz（可以下载此版本，建议官网查询版本下载最新稳定版，只需改变redis版本号数字）
+2.解压安装包并安装,安装位置 /home/centos
+tar xzf redis-4.0.2.tar.gz
+
+cd redis-4.0.2
+
+make
+
+make install
+
+Redis没有外部依赖，安装简单 。安装目录src执行程序,/usr/local/bin目录可以找到执行文件
+
+3.启动redis
+直接运行redis-server可启动
+
+搭建redis集群
+1.虚拟环境centos7 64位系统
+主机ip:
+172.18.113.73
+172.108.113.108
+172.18.113.100
+每台服务器一主一从，部署3主3从
+2.配置信息 172.18.113.73
+(1)创建集群配置，log日志，数据所在文件夹
+cd /home
+mkdir cluster-conf
+(2)创建集群端口文件夹
+cd cluster-conf
+mkdir 6379
+mkdir 6380
+(2)辅助配置文件到/home/cluster-conf下
+cp /home/centos/redis-4.0.2/redis.conf /home/cluster-conf/6379
+cp /home/centos/redis-4.0.2/redis.conf /home/cluster-conf/6380
+
+(3)修改6379目录下的redis.conf
+1.注释bind 127.0.0.1
+2.修改端口号
+port 6379
+3.指定记录日志的文件
+logfile "/home/cluster-conf/6379/redis.log"
+4.该目录要事先创建好，数据目录，数据库的写入会在这个目录。rdb、aof文件也会写在这个目录
+dir /home/cluster-conf/6379/
+5.是否开启集群
+cluster-enabled yes
+6.#集群配置文件的名称，每个节点都有一个集群相关的配置文件，持久化保存集群的信息，
+  #这个文件并不需要手动配置，这个配置文件有Redis生成并更新，
+  #每个Redis集群节点需要一个单独的配置文件，请确保与实例运行的系统中配置文件名称不冲突。
+  cluster-config-file nodes.conf
+7.#节点互连超时的阀值。集群节点超时毫秒数
+  cluster-node-timeout 5000
+8.#默认redis使用的是rdb方式持久化，这种方式在许多应用中已经足够用了，
+ #但是redis如果中途宕机，会导致可能有几分钟的数据丢失，
+ #根据save来策略进行持久化，Append Only File是另一种持久化方式，可以提供更好的持久化特性，
+ #Redis会把每次写入的数据在接收后都写入 appendonly.aof 文件，
+ #每次启动时Redis都会先把这个文件的数据读入内存里，先忽略RDB文件。
+ appendonly yes
+
+(4)修改6380目录下的redis.conf （只需复制6379目录下的redis.conf到6380路径下）只需修改端口机及其存储路径
+cp /home/cluster-conf/6379/redis.conf /home/cluster-conf/6380/redis.conf
+
+二. scp复制到其他服务器
+scp -r /home/centos/redis-4.0.2 root@172.18.113.100:/home
+scp -r /home/centos/redis-4.0.2 root@172.18.113.108:/home
+
+三.启动三台服务器的redis(三台全部执行此命令)
+/home/centos/redis-4.0.2/src/redis-server /home/cluster-conf/6379/redis.conf &
+/home/centos/redis-4.0.2/src/redis-server /home/cluster-conf/6379/redis.conf &
+查看状态是否启动：
+ps -ef|grep redis
+
+四.创建集群
+1.安装ruby
+yum install ruby
+2.解决ruby和redis相关程序包和类库
+yum install rubygems
+gem install reids
+如提示版本报错需要安装高版本ruby
+yum install curl
+rvm install 2.4.0   安装新版本
+rvm use  2.4.0      使用新版本
+rvm remove 2.0.0    卸载旧版本
+ruby --version      查看版本
+using /usr/local/rvm/gems/ruby-2.3.3成功
+在重新安装ruby的redis就可以了
+gem install redis
+
+3.启动集群
+/home/centos/redis-4.0.2/src/redis-trib.rb create --replicas 1 ip1:端口 ip2:端口  全部节点加上就可以
+成功信息
+>>> Performing Cluster Check (using node 172.18.113.73:6379)
+M: 289469490fcd8b5306af548261a4387c7513bc69 172.18.113.73:6379
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+S: 198fd38882939122bdcfca33e5eb096afad63250 172.18.113.73:6380
+   slots: (0 slots) slave
+   replicates 938e0c7f68850ac52adadc0d337a319c8afda09a
+S: e47ee031d1c9b0476a4c5d1163dc5681378e7f82 172.18.113.108:6380
+   slots: (0 slots) slave
+   replicates 289469490fcd8b5306af548261a4387c7513bc69
+S: 3ea13b122d619ea66e0d05ba51b114423de5ce72 172.18.113.108:6379
+   slots: (0 slots) slave
+   replicates ee965a4df451c2d90317760d4941938aaf15bb36
+M: 938e0c7f68850ac52adadc0d337a319c8afda09a 172.18.113.100:6379
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: ee965a4df451c2d90317760d4941938aaf15bb36 172.18.113.100:6380
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+
+
+五.测试集群
+1.登录客户端
+cd /home/centos/redis-4.0.9/src
+./redis-cli -c -p 6379
+set a 1 
+在另一台服务器get获取
+get a 
+
+
+当节点挂了，node.conf会记录新的数据
+
+

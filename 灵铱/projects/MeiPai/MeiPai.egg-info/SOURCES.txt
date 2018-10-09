@@ -1,0 +1,16 @@
+setup.py
+MeiPai/__init__.py
+MeiPai/file_model.py
+MeiPai/items.py
+MeiPai/jie_mi_bs.py
+MeiPai/main.py
+MeiPai/middlewares.py
+MeiPai/pipelines.py
+MeiPai/settings.py
+MeiPai.egg-info/PKG-INFO
+MeiPai.egg-info/SOURCES.txt
+MeiPai.egg-info/dependency_links.txt
+MeiPai.egg-info/entry_points.txt
+MeiPai.egg-info/top_level.txt
+MeiPai/spiders/__init__.py
+MeiPai/spiders/meiSpider.py

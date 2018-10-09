@@ -1,0 +1,14 @@
+setup.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt
+renren/__init__.py
+renren/file_model.py
+renren/items.py
+renren/middlewares.py
+renren/pipelines.py
+renren/settings.py
+renren/spiders/__init__.py
+renren/spiders/vspider.py

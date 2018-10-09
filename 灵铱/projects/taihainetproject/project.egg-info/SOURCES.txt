@@ -1,0 +1,17 @@
+setup.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt
+taihainetproject/__init__.py
+taihainetproject/items.py
+taihainetproject/middlewares.py
+taihainetproject/pipelines.py
+taihainetproject/settings.py
+taihainetproject/spiders/CaiJing.py
+taihainetproject/spiders/JunShi.py
+taihainetproject/spiders/KeJi.py
+taihainetproject/spiders/YuLe.py
+taihainetproject/spiders/__init__.py
+taihainetproject/spiders/text.py
