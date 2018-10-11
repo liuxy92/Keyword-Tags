@@ -1,3 +1,0 @@
-[scrapy]
-settings = V1Project.settings
-
